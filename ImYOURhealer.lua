@@ -44,6 +44,7 @@ local LOCALES = {
         range_alert_seconds = "Sekunden bis Meldung",
         mana_alert = "Low-Mana Meldung aktiv",
         mana_alert_threshold = "Mana-Schwelle (%)",
+        mana_alert_cooldown = "Cooldown Low-Mana (Sek.)",
         mana_alert_scope = "Mana-Meldung Bereich",
         mana_scope_group = "In jeder Gruppe",
         mana_scope_instance = "Nur in Instanzen",
@@ -52,9 +53,12 @@ local LOCALES = {
         mana_pot_status = "ManaPot-Status melden",
         innervate_thanks = "Automatisch Danke bei Anregen",
         cooldown_announce = "Cooldown-Meldungen",
+        silence_alert = "Silence-Meldung",
         pallypower_sync = "PallyPower Whisper bei Instanzstart",
         pallypower_whisper_apply = "Whisper-Aenderungen direkt anwenden",
         key_check = "Heroic-Schluessel pruefen",
+        wait_all_in_instance = "Begruessung erst wenn alle in Instanz sind",
+        wait_all_timeout = "Warte-Timeout (Sek.)",
         trigger_mode = "Ende-Erkennung",
         trigger_endboss_or_all = "Endboss ODER alle Bosse",
         trigger_endboss_only = "Nur Endboss",
@@ -92,6 +96,8 @@ local LOCALES = {
         range_alert_off = "Out-of-Range Meldungen deaktiviert.",
         cooldown_on = "Cooldown-Meldungen aktiviert.",
         cooldown_off = "Cooldown-Meldungen deaktiviert.",
+        silence_on = "Silence-Meldungen aktiviert.",
+        silence_off = "Silence-Meldungen deaktiviert.",
         pallypower_on = "PallyPower Whisper-Info aktiviert.",
         pallypower_off = "PallyPower Whisper-Info deaktiviert.",
         pallypower_apply_on = "PallyPower Whisper-Aenderungen aktiviert.",
@@ -136,6 +142,9 @@ local LOCALES = {
         tab_hunter = "Jaeger",
         cooldown_target_none = "niemand",
         cooldown_now_prefix = "CD jetzt",
+        silence_msg_seconds = "Ich bin %d Sek. gesilenced (%s)!",
+        silence_msg_unknown = "Ich bin gesilenced (%s)!",
+        silence_msg_interrupt = "Ich bin fuer %d Sek. unterbrochen/gesilenced (%s)!",
         ui_tab_general = "Allgemein",
         ui_tab_cooldowns = "Cooldowns",
         ui_tab_tests = "Tests",
@@ -161,10 +170,12 @@ local LOCALES = {
         cmd_help_10 = "/imyh range on|off - Out-of-Range Meldungen",
         cmd_help_11 = "/imyh rangetime <sek> - Out-of-Range Delay",
         cmd_help_12 = "/imyh cooldown on|off - Cooldown-Meldungen",
+        cmd_help_19 = "/imyh silence on|off - Silence-Meldungen",
         cmd_help_13 = "/imyh pally on|off - PallyPower Whisper",
         cmd_help_15 = "/imyh mana on|off - Low-Mana Meldungen",
         cmd_help_16 = "/imyh manathreshold <1-80> - Mana-Schwelle",
         cmd_help_17 = "/imyh manascope group|instance - Mana nur Gruppe oder nur Instanz",
+        cmd_help_18 = "/imyh manacd <5-300> - Cooldown fuer Low-Mana Meldung",
         cmd_help_14 = "/imyh log on|off|show|clear - Persistentes Log",
         selftest_ok = "Selftest erfolgreich.",
         selftest_fail = "Selftest fehlgeschlagen",
@@ -181,6 +192,7 @@ local LOCALES = {
         range_alert_seconds = "Seconds before alert",
         mana_alert = "Low mana alert enabled",
         mana_alert_threshold = "Mana threshold (%)",
+        mana_alert_cooldown = "Low mana cooldown (sec)",
         mana_alert_scope = "Low mana scope",
         mana_scope_group = "Any group",
         mana_scope_instance = "Instances only",
@@ -189,9 +201,12 @@ local LOCALES = {
         mana_pot_status = "Announce mana potion status",
         innervate_thanks = "Auto thank on Innervate",
         cooldown_announce = "Cooldown announcements",
+        silence_alert = "Silence alert",
         pallypower_sync = "PallyPower whispers on instance start",
         pallypower_whisper_apply = "Apply whisper requests directly",
         key_check = "Check heroic key ownership",
+        wait_all_in_instance = "Wait for all members before greeting",
+        wait_all_timeout = "Wait timeout (sec)",
         trigger_mode = "Completion detection",
         trigger_endboss_or_all = "End boss OR all bosses",
         trigger_endboss_only = "End boss only",
@@ -229,6 +244,8 @@ local LOCALES = {
         range_alert_off = "Out-of-range alerts disabled.",
         cooldown_on = "Cooldown announcements enabled.",
         cooldown_off = "Cooldown announcements disabled.",
+        silence_on = "Silence alerts enabled.",
+        silence_off = "Silence alerts disabled.",
         pallypower_on = "PallyPower whisper info enabled.",
         pallypower_off = "PallyPower whisper info disabled.",
         pallypower_apply_on = "PallyPower whisper apply enabled.",
@@ -273,6 +290,9 @@ local LOCALES = {
         tab_hunter = "Hunter",
         cooldown_target_none = "no target",
         cooldown_now_prefix = "CD now",
+        silence_msg_seconds = "I am silenced for %d sec (%s)!",
+        silence_msg_unknown = "I am silenced (%s)!",
+        silence_msg_interrupt = "I am interrupted/silenced for %d sec (%s)!",
         ui_tab_general = "General",
         ui_tab_cooldowns = "Cooldowns",
         ui_tab_tests = "Tests",
@@ -298,10 +318,12 @@ local LOCALES = {
         cmd_help_10 = "/imyh range on|off - out-of-range alerts",
         cmd_help_11 = "/imyh rangetime <sec> - out-of-range delay",
         cmd_help_12 = "/imyh cooldown on|off - cooldown announcements",
+        cmd_help_19 = "/imyh silence on|off - silence alerts",
         cmd_help_13 = "/imyh pally on|off - pallypower whisper sync",
         cmd_help_15 = "/imyh mana on|off - low mana alerts",
         cmd_help_16 = "/imyh manathreshold <1-80> - mana threshold",
         cmd_help_17 = "/imyh manascope group|instance - low mana scope",
+        cmd_help_18 = "/imyh manacd <5-300> - low mana alert cooldown",
         cmd_help_14 = "/imyh log on|off|show|clear - persistent log",
         selftest_ok = "Selftest passed.",
         selftest_fail = "Selftest failed",
@@ -444,14 +466,18 @@ local defaults = {
     rangeAlertSeconds = 4,
     manaAlertEnabled = true,
     manaAlertThreshold = 20,
+    manaAlertCooldownSeconds = 30,
     manaAlertScope = "group",
     manaInnervateHintEnabled = true,
     manaPotStatusEnabled = false,
     autoThankInnervate = true,
     cooldownAnnounceEnabled = true,
+    silenceAlertEnabled = true,
     pallyPowerWhisperEnabled = true,
     pallyPowerWhisperApplyEnabled = true,
     keyCheckEnabled = true,
+    waitAllInInstance = true,
+    waitAllInInstanceTimeout = 20,
     triggerMode = "endboss_or_all",
     minimap = {
         angle = 220,
@@ -488,6 +514,11 @@ local state = {
     onUpdateElapsed = 0,
     selectedCooldownClass = "PALADIN",
     manaLowAnnounced = false,
+    lastManaAlertAt = 0,
+    lastSilenceAlertAt = 0,
+    pendingRunStartKey = nil,
+    pendingRunStartAt = 0,
+    pendingPallyWhisperRunKey = nil,
 }
 
 local function tcopy(src)
@@ -803,6 +834,81 @@ local function getClassTabLabel(classToken)
     return classToken
 end
 
+local INTERRUPT_LOCKOUT_SECONDS = {
+    [1766] = 5,     -- Kick
+    [2139] = 10,    -- Counterspell
+    [6552] = 4,     -- Pummel
+    [19647] = 8,    -- Spell Lock
+    [15487] = 5,    -- Silence
+    [34490] = 3,    -- Silencing Shot
+    [8042] = 2,     -- Earth Shock (lockout on interrupt)
+}
+
+local function getPlayerDebuffRemaining(spellName)
+    if type(UnitDebuff) ~= "function" then
+        return nil
+    end
+    for i = 1, 40 do
+        local name, _, _, _, _, duration, expires = UnitDebuff("player", i)
+        if not name then
+            break
+        end
+        if name == spellName and duration and duration > 0 and expires and expires > 0 then
+            local now = GetTime and GetTime() or 0
+            local rem = math.floor((expires - now) + 0.5)
+            if rem < 0 then rem = 0 end
+            return rem
+        end
+    end
+    return nil
+end
+
+local function maybeAnnounceSilenceByAura(destGUID, spellName, auraType)
+    if not ImYOURhealerDB.silenceAlertEnabled then
+        return
+    end
+    if destGUID ~= UnitGUID("player") or auraType ~= "DEBUFF" then
+        return
+    end
+    local lower = string.lower(spellName or "")
+    local isSilence = string.find(lower, "silence", 1, true)
+        or string.find(lower, "silenced", 1, true)
+        or string.find(lower, "stille", 1, true)
+    if not isSilence then
+        return
+    end
+    local now = GetTime and GetTime() or 0
+    if (now - (state.lastSilenceAlertAt or 0)) < 2 then
+        return
+    end
+    local rem = getPlayerDebuffRemaining(spellName)
+    if rem and rem > 0 then
+        safeSend(string.format(L.silence_msg_seconds, rem, spellName))
+    else
+        safeSend(string.format(L.silence_msg_unknown, spellName or "?"))
+    end
+    state.lastSilenceAlertAt = now
+end
+
+local function maybeAnnounceSilenceByInterrupt(destGUID, spellID, spellName)
+    if not ImYOURhealerDB.silenceAlertEnabled then
+        return
+    end
+    if destGUID ~= UnitGUID("player") then
+        return
+    end
+    local seconds = INTERRUPT_LOCKOUT_SECONDS[spellID]
+    if not seconds then
+        return
+    end
+    local now = GetTime and GetTime() or 0
+    if (now - (state.lastSilenceAlertAt or 0)) < 2 then
+        return
+    end
+    safeSend(string.format(L.silence_msg_interrupt, seconds, spellName or "Interrupt"))
+    state.lastSilenceAlertAt = now
+end
+
 local function getCooldownTextForSpell(spellID)
     if type(GetSpellCooldown) ~= "function" then
         return nil
@@ -830,7 +936,7 @@ local function formatCooldownMessage(rule, destName, spellID)
     end
     local tpl = (ImYOURhealerDB.language == "de" and rule.de) or rule.en or rule.de
     local suffix = getCooldownTextForSpell(spellID or rule.spellID)
-    if string.find(tpl, "%%s", 1, true) then
+    if string.find(tpl, "%s", 1, true) then
         local base = string.format(tpl, target)
         if suffix then
             return base .. " " .. suffix
@@ -1001,6 +1107,10 @@ local function updateManaAlerts()
         state.manaLowAnnounced = false
         return
     end
+    if UnitIsDeadOrGhost and UnitIsDeadOrGhost("player") then
+        state.manaLowAnnounced = false
+        return
+    end
     if not IsInGroup() then
         state.manaLowAnnounced = false
         return
@@ -1016,9 +1126,13 @@ local function updateManaAlerts()
     local threshold = tonumber(ImYOURhealerDB.manaAlertThreshold) or 20
     if threshold < 1 then threshold = 1 end
     if threshold > 80 then threshold = 80 end
+    local cooldownSec = tonumber(ImYOURhealerDB.manaAlertCooldownSeconds) or 30
+    if cooldownSec < 5 then cooldownSec = 5 end
+    if cooldownSec > 300 then cooldownSec = 300 end
 
     local manaPct = getPlayerManaPercent()
-    if manaPct <= threshold and not state.manaLowAnnounced then
+    local now = GetTime and GetTime() or time()
+    if manaPct <= threshold and (now - (state.lastManaAlertAt or 0)) >= cooldownSec then
         safeSend(ImYOURhealerDB.messages.manaLow or L.mana_alert_default)
         if ImYOURhealerDB.manaInnervateHintEnabled and groupHasDruid() then
             safeSend(L.mana_innervate_text)
@@ -1026,6 +1140,7 @@ local function updateManaAlerts()
         if ImYOURhealerDB.manaPotStatusEnabled then
             safeSend(getManaPotionStatusText())
         end
+        state.lastManaAlertAt = now
         state.manaLowAnnounced = true
         logWarn(string.format("Low mana alert fired at %d%%", manaPct))
         return
@@ -1113,6 +1228,28 @@ local function findGroupUnitByPlayerName(name)
     return nil
 end
 
+local function isSingleClassInFiveMan(targetClassToken)
+    if not targetClassToken or IsInRaid() then
+        return false
+    end
+    local subgroup = (GetNumSubgroupMembers and GetNumSubgroupMembers()) or 0
+    if (subgroup + 1) ~= 5 then
+        return false
+    end
+    local count = 0
+    local _, myClass = UnitClass("player")
+    if myClass == targetClassToken then
+        count = count + 1
+    end
+    for _, unit in ipairs(buildGroupUnits()) do
+        local _, classToken = UnitClass(unit)
+        if classToken == targetClassToken then
+            count = count + 1
+        end
+    end
+    return count == 1
+end
+
 local function pallyPowerReady()
     return type(PallyPower) == "table"
         and type(PallyPower_Assignments) == "table"
@@ -1160,18 +1297,18 @@ end
 
 local function sendPallyPowerWhispers(runKey)
     if not ImYOURhealerDB.pallyPowerWhisperEnabled then
-        return
+        return true
     end
     if ImYOURhealerDB.pallyPowerWhisperRuns[runKey] then
-        return
+        return true
     end
-    ImYOURhealerDB.pallyPowerWhisperRuns[runKey] = time()
 
     if not pallyPowerReady() then
         dprint(L.pallypower_missing)
-        return
+        return false
     end
 
+    local sentCount = 0
     for _, unit in ipairs(buildGroupUnits()) do
         local name = UnitName(unit)
         if name then
@@ -1180,11 +1317,15 @@ local function sendPallyPowerWhispers(runKey)
             if spell then
                 text = string.format("%s %s (%s). %s", L.pallypower_whisper_header, spell, shortName(by or "?"), L.pallypower_whisper_hint)
             else
-                text = string.format("%s %s", L.pallypower_whisper_header, L.pallypower_missing)
+                text = string.format("%s %s. %s", L.pallypower_whisper_header, L.pallypower_missing, L.pallypower_whisper_hint)
             end
             SendChatMessage(text, "WHISPER", nil, name)
+            sentCount = sentCount + 1
         end
     end
+    ImYOURhealerDB.pallyPowerWhisperRuns[runKey] = time()
+    dprint(string.format("PallyPower whisper run=%s count=%d", tostring(runKey), sentCount))
+    return true
 end
 
 local function getBlessingIndexFromWhisper(request)
@@ -1244,23 +1385,44 @@ local function handleWhisperRequest(msg, sender)
     end
 
     local me = UnitName("player")
-    if not PallyPower_NormalAssignments[me] then
-        PallyPower_NormalAssignments[me] = {}
-    end
-    if not PallyPower_NormalAssignments[me][classID] then
-        PallyPower_NormalAssignments[me][classID] = {}
-    end
-    local previous = PallyPower_NormalAssignments[me][classID][tname]
-    PallyPower_NormalAssignments[me][classID][tname] = buffIndex
+    local useGreater = isSingleClassInFiveMan(targetClassToken)
+    local previous
 
-    if type(PallyPower.SendNormalBlessings) == "function" then
-        PallyPower:SendNormalBlessings(me, classID, tname)
+    if useGreater then
+        if not PallyPower_Assignments[me] then
+            PallyPower_Assignments[me] = {}
+        end
+        previous = tonumber(PallyPower_Assignments[me][classID] or 0) or 0
+        PallyPower_Assignments[me][classID] = buffIndex
+
+        if PallyPower_NormalAssignments[me]
+            and PallyPower_NormalAssignments[me][classID]
+            and PallyPower_NormalAssignments[me][classID][tname] then
+            PallyPower_NormalAssignments[me][classID][tname] = nil
+        end
+
+        if type(PallyPower.SendMessage) == "function" then
+            PallyPower:SendMessage("ASSIGN " .. tostring(me) .. " " .. tostring(classID) .. " " .. tostring(buffIndex))
+        end
+    else
+        if not PallyPower_NormalAssignments[me] then
+            PallyPower_NormalAssignments[me] = {}
+        end
+        if not PallyPower_NormalAssignments[me][classID] then
+            PallyPower_NormalAssignments[me][classID] = {}
+        end
+        previous = tonumber(PallyPower_NormalAssignments[me][classID][tname] or 0) or 0
+        PallyPower_NormalAssignments[me][classID][tname] = buffIndex
+
+        if type(PallyPower.SendNormalBlessings) == "function" then
+            PallyPower:SendNormalBlessings(me, classID, tname)
+        end
     end
     if type(PallyPower.UpdateLayout) == "function" then
         PallyPower:UpdateLayout()
     end
     SendChatMessage(L.pallypower_whisper_ack, "WHISPER", nil, sender)
-    if previous ~= buffIndex then
+    if previous ~= (tonumber(buffIndex) or buffIndex) then
         local spellName = (PallyPower.Spells and PallyPower.Spells[buffIndex]) or (PallyPower.GSpells and PallyPower.GSpells[buffIndex]) or tostring(buffIndex)
         safeSend(string.format(L.pallypower_group_change, shortName(sender), tostring(spellName)))
     end
@@ -1440,12 +1602,96 @@ local function applyPopupLocale()
     popup.button2 = L.popup_no
 end
 
+local function areGroupMembersLikelyInsideInstance()
+    if not IsInGroup() then
+        return true
+    end
+    for _, unit in ipairs(buildGroupUnits()) do
+        if UnitExists(unit) then
+            if not UnitIsConnected(unit) then
+                return false
+            end
+            if UnitInRange then
+                local inRange = UnitInRange(unit)
+                if inRange == false then
+                    return false
+                end
+            end
+        end
+    end
+    return true
+end
+
+local function sendRunStartMessages(runKey)
+    if not runKey or ImYOURhealerDB.greetedRuns[runKey] then
+        return
+    end
+    ImYOURhealerDB.greetedRuns[runKey] = time()
+    safeSend(formatGreeting())
+    local ppOK = sendPallyPowerWhispers(runKey)
+    if not ppOK then
+        state.pendingPallyWhisperRunKey = runKey
+    else
+        state.pendingPallyWhisperRunKey = nil
+    end
+end
+
+local function processPendingRunStart()
+    local runKey = state.pendingRunStartKey
+    if not runKey then
+        return
+    end
+    if runKey ~= state.currentRunKey then
+        state.pendingRunStartKey = nil
+        state.pendingRunStartAt = 0
+        return
+    end
+    if ImYOURhealerDB.greetedRuns[runKey] then
+        state.pendingRunStartKey = nil
+        state.pendingRunStartAt = 0
+        return
+    end
+
+    local timeout = tonumber(ImYOURhealerDB.waitAllInInstanceTimeout) or 20
+    if timeout < 5 then timeout = 5 end
+    if timeout > 120 then timeout = 120 end
+    local waited = time() - (state.pendingRunStartAt or time())
+
+    if areGroupMembersLikelyInsideInstance() or waited >= timeout then
+        dprint(string.format("Pending start resolved for %s (waited=%d)", tostring(runKey), tonumber(waited) or 0))
+        sendRunStartMessages(runKey)
+        state.pendingRunStartKey = nil
+        state.pendingRunStartAt = 0
+    end
+end
+
+local function processPendingPallyWhispers()
+    local runKey = state.pendingPallyWhisperRunKey
+    if not runKey then
+        return
+    end
+    if runKey ~= state.currentRunKey then
+        state.pendingPallyWhisperRunKey = nil
+        return
+    end
+    if ImYOURhealerDB.pallyPowerWhisperRuns[runKey] then
+        state.pendingPallyWhisperRunKey = nil
+        return
+    end
+    if sendPallyPowerWhispers(runKey) then
+        state.pendingPallyWhisperRunKey = nil
+    end
+end
+
 local function enterInstanceIfNeeded(reason, isInitialLogin, isReloadingUi)
     local ctx = getCurrentInstanceContext()
     if not ctx then
         state.currentRunKey = nil
         state.currentInstanceName = nil
         state.currentIsHeroic = false
+        state.pendingRunStartKey = nil
+        state.pendingRunStartAt = 0
+        state.pendingPallyWhisperRunKey = nil
         return
     end
 
@@ -1477,9 +1723,14 @@ local function enterInstanceIfNeeded(reason, isInitialLogin, isReloadingUi)
         return
     end
 
-    ImYOURhealerDB.greetedRuns[runKey] = time()
-    safeSend(formatGreeting())
-    sendPallyPowerWhispers(runKey)
+    if ImYOURhealerDB.waitAllInInstance and not areGroupMembersLikelyInsideInstance() then
+        state.pendingRunStartKey = runKey
+        state.pendingRunStartAt = time()
+        dprint(string.format("Greeting delayed until group is inside (run=%s)", tostring(runKey)))
+        return
+    end
+
+    sendRunStartMessages(runKey)
 end
 
 local function createEditBox(parent, width, height)
@@ -1651,7 +1902,7 @@ createConfigUI = function()
     langDD:SetPoint("TOPLEFT", general, "TOPLEFT", 100, y + 10)
     UIDropDownMenu_SetSelectedValue(langDD, ImYOURhealerDB.language)
 
-    y = y - 24
+    y = y - 48
 
     local keyCheckCB = CreateFrame("CheckButton", "ImYOURhealerKeyCheckCB", general, "UICheckButtonTemplate")
     keyCheckCB:SetPoint("TOPLEFT", general, "TOPLEFT", 0, y)
@@ -1660,6 +1911,38 @@ createConfigUI = function()
     keyCheckCB:SetScript("OnClick", function(self)
         ImYOURhealerDB.keyCheckEnabled = self:GetChecked() and true or false
         printMsg(ImYOURhealerDB.keyCheckEnabled and L.key_check_on or L.key_check_off)
+    end)
+
+    local waitAllCB = CreateFrame("CheckButton", "ImYOURhealerWaitAllCB", general, "UICheckButtonTemplate")
+    waitAllCB:SetPoint("TOPLEFT", general, "TOPLEFT", 300, y)
+    setCheckButtonLabel(waitAllCB, L.wait_all_in_instance)
+    waitAllCB:SetChecked(ImYOURhealerDB.waitAllInInstance)
+    waitAllCB:SetScript("OnClick", function(self)
+        ImYOURhealerDB.waitAllInInstance = self:GetChecked() and true or false
+    end)
+
+    createLabel(general, L.wait_all_timeout, 300, y - 21)
+    local waitTimeoutBox = CreateFrame("EditBox", "ImYOURhealerWaitTimeoutBox", general, "InputBoxTemplate")
+    waitTimeoutBox:SetSize(48, 20)
+    waitTimeoutBox:SetPoint("TOPLEFT", general, "TOPLEFT", 450, y - 20)
+    waitTimeoutBox:SetAutoFocus(false)
+    waitTimeoutBox:SetNumeric(true)
+    waitTimeoutBox:SetMaxLetters(3)
+    waitTimeoutBox:SetText(tostring(ImYOURhealerDB.waitAllInInstanceTimeout or 20))
+    waitTimeoutBox:SetScript("OnEnterPressed", function(self)
+        local val = tonumber(self:GetText())
+        if val and val >= 5 and val <= 120 then
+            ImYOURhealerDB.waitAllInInstanceTimeout = val
+        end
+        self:SetText(tostring(ImYOURhealerDB.waitAllInInstanceTimeout or 20))
+        self:ClearFocus()
+    end)
+    waitTimeoutBox:SetScript("OnEditFocusLost", function(self)
+        local val = tonumber(self:GetText())
+        if val and val >= 5 and val <= 120 then
+            ImYOURhealerDB.waitAllInInstanceTimeout = val
+        end
+        self:SetText(tostring(ImYOURhealerDB.waitAllInInstanceTimeout or 20))
     end)
 
     y = y - 24
@@ -1732,14 +2015,38 @@ createConfigUI = function()
         self:SetText(tostring(ImYOURhealerDB.manaAlertThreshold or 20))
     end)
 
-    createLabel(general, L.mana_alert_scope, 300, y - 21)
+    createLabel(general, L.mana_alert_cooldown, 300, y - 21)
+    local manaCooldownBox = CreateFrame("EditBox", "ImYOURhealerManaCooldownBox", general, "InputBoxTemplate")
+    manaCooldownBox:SetSize(48, 20)
+    manaCooldownBox:SetPoint("TOPLEFT", general, "TOPLEFT", 450, y - 20)
+    manaCooldownBox:SetAutoFocus(false)
+    manaCooldownBox:SetNumeric(true)
+    manaCooldownBox:SetMaxLetters(3)
+    manaCooldownBox:SetText(tostring(ImYOURhealerDB.manaAlertCooldownSeconds or 30))
+    manaCooldownBox:SetScript("OnEnterPressed", function(self)
+        local val = tonumber(self:GetText())
+        if val and val >= 5 and val <= 300 then
+            ImYOURhealerDB.manaAlertCooldownSeconds = val
+        end
+        self:SetText(tostring(ImYOURhealerDB.manaAlertCooldownSeconds or 30))
+        self:ClearFocus()
+    end)
+    manaCooldownBox:SetScript("OnEditFocusLost", function(self)
+        local val = tonumber(self:GetText())
+        if val and val >= 5 and val <= 300 then
+            ImYOURhealerDB.manaAlertCooldownSeconds = val
+        end
+        self:SetText(tostring(ImYOURhealerDB.manaAlertCooldownSeconds or 30))
+    end)
+
+    createLabel(general, L.mana_alert_scope, 300, y - 43)
     local manaScopeDD = createDropdown(general, 190, {
         { key = "group", label = L.mana_scope_group },
         { key = "instance", label = L.mana_scope_instance },
     }, function(key)
         ImYOURhealerDB.manaAlertScope = key
     end)
-    manaScopeDD:SetPoint("TOPLEFT", general, "TOPLEFT", 375, y - 12)
+    manaScopeDD:SetPoint("TOPLEFT", general, "TOPLEFT", 375, y - 34)
     UIDropDownMenu_SetSelectedValue(manaScopeDD, ImYOURhealerDB.manaAlertScope or "group")
 
     y = y - 24
@@ -1779,6 +2086,15 @@ createConfigUI = function()
     cooldownCB:SetScript("OnClick", function(self)
         ImYOURhealerDB.cooldownAnnounceEnabled = self:GetChecked() and true or false
         printMsg(ImYOURhealerDB.cooldownAnnounceEnabled and L.cooldown_on or L.cooldown_off)
+    end)
+
+    local silenceCB = CreateFrame("CheckButton", "ImYOURhealerSilenceCB", general, "UICheckButtonTemplate")
+    silenceCB:SetPoint("TOPLEFT", general, "TOPLEFT", 300, y)
+    setCheckButtonLabel(silenceCB, L.silence_alert)
+    silenceCB:SetChecked(ImYOURhealerDB.silenceAlertEnabled)
+    silenceCB:SetScript("OnClick", function(self)
+        ImYOURhealerDB.silenceAlertEnabled = self:GetChecked() and true or false
+        printMsg(ImYOURhealerDB.silenceAlertEnabled and L.silence_on or L.silence_off)
     end)
 
     y = y - 24
@@ -2148,6 +2464,14 @@ local function initializeDB()
     if ImYOURhealerDB.manaAlertScope ~= "group" and ImYOURhealerDB.manaAlertScope ~= "instance" then
         ImYOURhealerDB.manaAlertScope = "group"
     end
+    local cd = tonumber(ImYOURhealerDB.manaAlertCooldownSeconds) or 30
+    if cd < 5 then cd = 5 end
+    if cd > 300 then cd = 300 end
+    ImYOURhealerDB.manaAlertCooldownSeconds = cd
+    local waitT = tonumber(ImYOURhealerDB.waitAllInInstanceTimeout) or 20
+    if waitT < 5 then waitT = 5 end
+    if waitT > 120 then waitT = 120 end
+    ImYOURhealerDB.waitAllInInstanceTimeout = waitT
     _G.ImYOURhealerDB = ImYOURhealerDB
     _G.ImYOUhealerDB = ImYOURhealerDB
 
@@ -2175,6 +2499,8 @@ local function printHelp()
     printMsg(L.cmd_help_15)
     printMsg(L.cmd_help_16)
     printMsg(L.cmd_help_17)
+    printMsg(L.cmd_help_18)
+    printMsg(L.cmd_help_19)
 end
 
 local function runSelfTests()
@@ -2322,6 +2648,18 @@ SlashCmdList["IMYOURHEALER"] = function(msg)
         return
     end
 
+    if cmd == "silence" then
+        if arg == "on" then
+            ImYOURhealerDB.silenceAlertEnabled = true
+        elseif arg == "off" then
+            ImYOURhealerDB.silenceAlertEnabled = false
+        else
+            ImYOURhealerDB.silenceAlertEnabled = not ImYOURhealerDB.silenceAlertEnabled
+        end
+        printMsg(ImYOURhealerDB.silenceAlertEnabled and L.silence_on or L.silence_off)
+        return
+    end
+
     if cmd == "pally" then
         if arg == "on" then
             ImYOURhealerDB.pallyPowerWhisperEnabled = true
@@ -2370,6 +2708,17 @@ SlashCmdList["IMYOURHEALER"] = function(msg)
         return
     end
 
+    if cmd == "manacd" then
+        local sec = tonumber(arg)
+        if sec and sec >= 5 and sec <= 300 then
+            ImYOURhealerDB.manaAlertCooldownSeconds = sec
+            printMsg(string.format("%s: %d", L.mana_alert_cooldown, sec))
+        else
+            printMsg("/imyh manacd <5-300>")
+        end
+        return
+    end
+
     if cmd == "log" then
         if arg == "on" then
             ImYOURhealerDB.logEnabled = true
@@ -2413,6 +2762,8 @@ addon:SetScript("OnUpdate", function(_, elapsed)
         state.onUpdateElapsed = 0
         updateRangeAlerts()
         updateManaAlerts()
+        processPendingRunStart()
+        processPendingPallyWhispers()
     end
 end)
 
@@ -2458,12 +2809,18 @@ addon:SetScript("OnEvent", function(_, event, ...)
     end
 
     if event == "COMBAT_LOG_EVENT_UNFILTERED" then
-        local _, subevent, _, sourceGUID, sourceName, _, _, destGUID, destName, _, _, spellID = CombatLogGetCurrentEventInfo()
+        local _, subevent, _, sourceGUID, sourceName, _, _, destGUID, destName, _, _, spellID, spellName, _, auraType = CombatLogGetCurrentEventInfo()
         if subevent == "UNIT_DIED" and destName then
             handleBossDeath(destName)
         end
         if subevent == "SPELL_CAST_SUCCESS" and sourceGUID == UnitGUID("player") and spellID then
             handlePlayerCooldownCast(spellID, destName)
+        end
+        if subevent == "SPELL_AURA_APPLIED" and spellName then
+            maybeAnnounceSilenceByAura(destGUID, spellName, auraType)
+        end
+        if subevent == "SPELL_INTERRUPT" and spellID then
+            maybeAnnounceSilenceByInterrupt(destGUID, spellID, spellName)
         end
         if spellID and sourceName then
             handleInnervateThanks(subevent, sourceName, destGUID, spellID)

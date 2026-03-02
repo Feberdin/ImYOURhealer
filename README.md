@@ -87,3 +87,9 @@ German aliases are also supported, for example:
 
 ## License
 Private use in the Feberdin context. Add a formal `LICENSE` file before public redistribution.
+
+## Store Description (EN)
+ImYOURhealer is a healer-focused WoW TBC Classic addon that automates party communication across the full dungeon lifecycle: smart run-start messages, configurable completion flow, low-mana and range alerts, cooldown callouts, and practical PallyPower whisper coordination.
+
+## Store Description (DE)
+ImYOURhealer ist ein healer-fokussiertes WoW TBC Classic Addon, das die Gruppenkommunikation über den gesamten Instanzverlauf automatisiert: intelligente Startnachrichten, konfigurierbarer Abschluss-Flow, Low-Mana- und Reichweitenwarnungen, Cooldown-Ansagen und praktische PallyPower-Whisper-Koordination.
