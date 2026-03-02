@@ -54,8 +54,9 @@ local LOCALES = {
         innervate_thanks = "Automatisch Danke bei Anregen",
         cooldown_announce = "Cooldown-Meldungen",
         silence_alert = "Silence-Meldung",
-        pallypower_sync = "PallyPower Whisper bei Instanzstart",
-        pallypower_whisper_apply = "Whisper-Aenderungen direkt anwenden",
+        pallypower_sync = "PallyPower Gruppeninfo bei Instanzstart",
+        pallypower_whisper_apply = "PP-Aenderungen aus Chat direkt anwenden",
+        pallypower_manual_button = "PallyPower Info jetzt senden",
         key_check = "Heroic-Schluessel pruefen",
         wait_all_in_instance = "Begruessung erst wenn alle in Instanz sind",
         wait_all_timeout = "Warte-Timeout (Sek.)",
@@ -67,7 +68,17 @@ local LOCALES = {
         finish_message = "Abschlussnachricht",
         rerun_message = "Nochmal-Runde Nachricht",
         farewell_message = "Abschiedsnachricht",
+        range_alert_text = "Out-of-Range Text",
         reset_texts = "Texte auf Sprach-Standard setzen",
+        mana_innervate_text_label = "Anregen-Hinweis Text",
+        mana_pot_ready_label = "ManaPot bereit Text",
+        mana_pot_cd_label = "ManaPot auf CD Text",
+        silence_seconds_label = "Silence Text mit Dauer",
+        silence_unknown_label = "Silence Text ohne Dauer",
+        silence_interrupt_label = "Interrupt/Silence Text",
+        pallypower_group_header_label = "PallyPower Header",
+        pallypower_group_hint_label = "PallyPower Umstell-Hinweis",
+        pallypower_group_change_label = "PallyPower Aenderungstext",
         test_greeting = "Begrüßung testen",
         test_finish = "Abschluss testen",
         test_rerun_yes = "Rerun Ja testen",
@@ -77,7 +88,7 @@ local LOCALES = {
         test_range_alert = "Out-of-Range Test",
         test_mana_alert = "Mana-Test",
         test_cooldown = "Cooldown-Test",
-        test_pally_whisper = "PallyPower Whisper-Test",
+        test_pally_whisper = "PallyPower Gruppeninfo-Test",
         test_pally_self = "PallyPower Selbsttest",
         popup_text = "Möchtest du noch eine Instanz laufen?",
         popup_yes = "Ja",
@@ -98,10 +109,10 @@ local LOCALES = {
         cooldown_off = "Cooldown-Meldungen deaktiviert.",
         silence_on = "Silence-Meldungen aktiviert.",
         silence_off = "Silence-Meldungen deaktiviert.",
-        pallypower_on = "PallyPower Whisper-Info aktiviert.",
-        pallypower_off = "PallyPower Whisper-Info deaktiviert.",
-        pallypower_apply_on = "PallyPower Whisper-Aenderungen aktiviert.",
-        pallypower_apply_off = "PallyPower Whisper-Aenderungen deaktiviert.",
+        pallypower_on = "PallyPower Gruppeninfo aktiviert.",
+        pallypower_off = "PallyPower Gruppeninfo deaktiviert.",
+        pallypower_apply_on = "PallyPower Chat-Aenderungen aktiviert.",
+        pallypower_apply_off = "PallyPower Chat-Aenderungen deaktiviert.",
         unknown_cmd = "Unbekannter Befehl. Nutze /imyh",
         lang_set = "Sprache gesetzt auf",
         non_party_fallback = "Nicht in Gruppe, sende nach /s.",
@@ -129,8 +140,15 @@ local LOCALES = {
         pallypower_whisper_ack = "Anfrage erhalten, ich habe es in PallyPower gesetzt.",
         pallypower_whisper_fail = "Konnte PallyPower nicht automatisch aendern.",
         pallypower_whisper_invalid = "Unbekannter Buff-Wunsch. Nutze z.B. 'pp wisdom'.",
-        pallypower_whisper_usage = "PP-Hilfe: pp weisheit|macht|koenige|erloesung|licht|schutz (auch: wisdom|might|kings|salv|light|sanc).",
+        pallypower_whisper_usage = "PP-Hilfe: Schreibe in Gruppe oder per Whisper: pp weisheit|macht|koenige|erloesung|licht|schutz (auch: wisdom|might|kings|salv|light|sanc).",
+        pallypower_group_header = "PallyPower Verteilung aktuell:",
+        pallypower_group_line = "%s -> %s (%s)",
+        pallypower_group_line_missing = "%s -> keine Zuweisung",
+        pallypower_group_hint = "Zum Umstellen: pp wisdom, pp might, pp kings, pp salv, pp light oder pp sanc.",
         pallypower_group_change = "%s hat einen anderen PallyPower-Buff gewaehlt: %s.",
+        pallypower_manual_sent = "PallyPower Info in Gruppe gesendet (%d Spieler).",
+        pallypower_manual_none = "Keine Spieler fuer PallyPower-Info gefunden.",
+        pallypower_manual_off = "PallyPower Gruppeninfo ist deaktiviert.",
         tab_paladin = "Paladin",
         tab_priest = "Priester",
         tab_druid = "Druide",
@@ -147,6 +165,7 @@ local LOCALES = {
         silence_msg_interrupt = "Ich bin fuer %d Sek. unterbrochen/gesilenced (%s)!",
         ui_tab_general = "Allgemein",
         ui_tab_cooldowns = "Cooldowns",
+        ui_tab_texts = "Texte",
         ui_tab_tests = "Tests",
         pallypower_selftest_ok = "PallyPower Selbsttest abgeschlossen.",
         pallypower_selftest_skip = "PallyPower Selbsttest nur als Paladin sinnvoll.",
@@ -202,8 +221,9 @@ local LOCALES = {
         innervate_thanks = "Auto thank on Innervate",
         cooldown_announce = "Cooldown announcements",
         silence_alert = "Silence alert",
-        pallypower_sync = "PallyPower whispers on instance start",
-        pallypower_whisper_apply = "Apply whisper requests directly",
+        pallypower_sync = "PallyPower group info on instance start",
+        pallypower_whisper_apply = "Apply PP changes from chat directly",
+        pallypower_manual_button = "Send PallyPower info now",
         key_check = "Check heroic key ownership",
         wait_all_in_instance = "Wait for all members before greeting",
         wait_all_timeout = "Wait timeout (sec)",
@@ -215,7 +235,17 @@ local LOCALES = {
         finish_message = "Completion message",
         rerun_message = "Another run message",
         farewell_message = "Farewell message",
+        range_alert_text = "Out-of-range text",
         reset_texts = "Reset texts to language default",
+        mana_innervate_text_label = "Innervate hint text",
+        mana_pot_ready_label = "Mana potion ready text",
+        mana_pot_cd_label = "Mana potion cooldown text",
+        silence_seconds_label = "Silence text with duration",
+        silence_unknown_label = "Silence text without duration",
+        silence_interrupt_label = "Interrupt/silence text",
+        pallypower_group_header_label = "PallyPower header",
+        pallypower_group_hint_label = "PallyPower change hint",
+        pallypower_group_change_label = "PallyPower change text",
         test_greeting = "Test greeting",
         test_finish = "Test completion",
         test_rerun_yes = "Test rerun yes",
@@ -225,7 +255,7 @@ local LOCALES = {
         test_range_alert = "Test out-of-range",
         test_mana_alert = "Mana test",
         test_cooldown = "Test cooldown",
-        test_pally_whisper = "Test PallyPower whisper",
+        test_pally_whisper = "Test PallyPower group info",
         test_pally_self = "PallyPower selftest",
         popup_text = "Do you want to run another instance?",
         popup_yes = "Yes",
@@ -246,10 +276,10 @@ local LOCALES = {
         cooldown_off = "Cooldown announcements disabled.",
         silence_on = "Silence alerts enabled.",
         silence_off = "Silence alerts disabled.",
-        pallypower_on = "PallyPower whisper info enabled.",
-        pallypower_off = "PallyPower whisper info disabled.",
-        pallypower_apply_on = "PallyPower whisper apply enabled.",
-        pallypower_apply_off = "PallyPower whisper apply disabled.",
+        pallypower_on = "PallyPower group info enabled.",
+        pallypower_off = "PallyPower group info disabled.",
+        pallypower_apply_on = "PallyPower chat apply enabled.",
+        pallypower_apply_off = "PallyPower chat apply disabled.",
         unknown_cmd = "Unknown command. Use /imyh",
         lang_set = "Language set to",
         non_party_fallback = "Not in group, sending to /s.",
@@ -277,8 +307,15 @@ local LOCALES = {
         pallypower_whisper_ack = "Request received, I set it in PallyPower.",
         pallypower_whisper_fail = "Could not auto-apply PallyPower change.",
         pallypower_whisper_invalid = "Unknown blessing request. Use for example 'pp wisdom'.",
-        pallypower_whisper_usage = "PP help: pp wisdom|might|kings|salv|light|sanc (also: weisheit|macht|koenige|erloesung|licht|schutz).",
+        pallypower_whisper_usage = "PP help: Write in party/raid chat or whisper: pp wisdom|might|kings|salv|light|sanc (also: weisheit|macht|koenige|erloesung|licht|schutz).",
+        pallypower_group_header = "Current PallyPower assignments:",
+        pallypower_group_line = "%s -> %s (%s)",
+        pallypower_group_line_missing = "%s -> no assignment",
+        pallypower_group_hint = "To change yours: pp wisdom, pp might, pp kings, pp salv, pp light, or pp sanc.",
         pallypower_group_change = "%s selected a different PallyPower buff: %s.",
+        pallypower_manual_sent = "PallyPower group info sent (%d players).",
+        pallypower_manual_none = "No players found for PallyPower info.",
+        pallypower_manual_off = "PallyPower group info is disabled.",
         tab_paladin = "Paladin",
         tab_priest = "Priest",
         tab_druid = "Druid",
@@ -295,6 +332,7 @@ local LOCALES = {
         silence_msg_interrupt = "I am interrupted/silenced for %d sec (%s)!",
         ui_tab_general = "General",
         ui_tab_cooldowns = "Cooldowns",
+        ui_tab_texts = "Texts",
         ui_tab_tests = "Tests",
         pallypower_selftest_ok = "PallyPower selftest completed.",
         pallypower_selftest_skip = "PallyPower selftest is mainly useful on paladin.",
@@ -337,6 +375,16 @@ local MESSAGE_PRESETS = {
         rerun = LOCALES.de.rerun_default,
         farewell = LOCALES.de.farewell_default,
         manaLow = LOCALES.de.mana_alert_default,
+        rangeAlert = LOCALES.de.range_alert_message,
+        manaInnervate = LOCALES.de.mana_innervate_text,
+        manaPotReady = LOCALES.de.mana_pot_ready,
+        manaPotCd = LOCALES.de.mana_pot_cd,
+        silenceSeconds = LOCALES.de.silence_msg_seconds,
+        silenceUnknown = LOCALES.de.silence_msg_unknown,
+        silenceInterrupt = LOCALES.de.silence_msg_interrupt,
+        pallyGroupHeader = LOCALES.de.pallypower_group_header,
+        pallyGroupHint = LOCALES.de.pallypower_group_hint,
+        pallyGroupChange = LOCALES.de.pallypower_group_change,
     },
     en = {
         greeting = LOCALES.en.greet_default,
@@ -344,6 +392,16 @@ local MESSAGE_PRESETS = {
         rerun = LOCALES.en.rerun_default,
         farewell = LOCALES.en.farewell_default,
         manaLow = LOCALES.en.mana_alert_default,
+        rangeAlert = LOCALES.en.range_alert_message,
+        manaInnervate = LOCALES.en.mana_innervate_text,
+        manaPotReady = LOCALES.en.mana_pot_ready,
+        manaPotCd = LOCALES.en.mana_pot_cd,
+        silenceSeconds = LOCALES.en.silence_msg_seconds,
+        silenceUnknown = LOCALES.en.silence_msg_unknown,
+        silenceInterrupt = LOCALES.en.silence_msg_interrupt,
+        pallyGroupHeader = LOCALES.en.pallypower_group_header,
+        pallyGroupHint = LOCALES.en.pallypower_group_hint,
+        pallyGroupChange = LOCALES.en.pallypower_group_change,
     },
 }
 
@@ -496,6 +554,16 @@ local defaults = {
         rerun = "",
         farewell = "",
         manaLow = "",
+        rangeAlert = "",
+        manaInnervate = "",
+        manaPotReady = "",
+        manaPotCd = "",
+        silenceSeconds = "",
+        silenceUnknown = "",
+        silenceInterrupt = "",
+        pallyGroupHeader = "",
+        pallyGroupHint = "",
+        pallyGroupChange = "",
     },
 }
 
@@ -519,6 +587,7 @@ local state = {
     pendingRunStartKey = nil,
     pendingRunStartAt = 0,
     pendingPallyWhisperRunKey = nil,
+    pendingWhisperFallbacks = {},
 }
 
 local function tcopy(src)
@@ -575,6 +644,36 @@ local function ensureMessagesForLanguage()
     if not ImYOURhealerDB.messages.manaLow or ImYOURhealerDB.messages.manaLow == "" then
         ImYOURhealerDB.messages.manaLow = preset.manaLow
     end
+    if not ImYOURhealerDB.messages.rangeAlert or ImYOURhealerDB.messages.rangeAlert == "" then
+        ImYOURhealerDB.messages.rangeAlert = preset.rangeAlert
+    end
+    if not ImYOURhealerDB.messages.manaInnervate or ImYOURhealerDB.messages.manaInnervate == "" then
+        ImYOURhealerDB.messages.manaInnervate = preset.manaInnervate
+    end
+    if not ImYOURhealerDB.messages.manaPotReady or ImYOURhealerDB.messages.manaPotReady == "" then
+        ImYOURhealerDB.messages.manaPotReady = preset.manaPotReady
+    end
+    if not ImYOURhealerDB.messages.manaPotCd or ImYOURhealerDB.messages.manaPotCd == "" then
+        ImYOURhealerDB.messages.manaPotCd = preset.manaPotCd
+    end
+    if not ImYOURhealerDB.messages.silenceSeconds or ImYOURhealerDB.messages.silenceSeconds == "" then
+        ImYOURhealerDB.messages.silenceSeconds = preset.silenceSeconds
+    end
+    if not ImYOURhealerDB.messages.silenceUnknown or ImYOURhealerDB.messages.silenceUnknown == "" then
+        ImYOURhealerDB.messages.silenceUnknown = preset.silenceUnknown
+    end
+    if not ImYOURhealerDB.messages.silenceInterrupt or ImYOURhealerDB.messages.silenceInterrupt == "" then
+        ImYOURhealerDB.messages.silenceInterrupt = preset.silenceInterrupt
+    end
+    if not ImYOURhealerDB.messages.pallyGroupHeader or ImYOURhealerDB.messages.pallyGroupHeader == "" then
+        ImYOURhealerDB.messages.pallyGroupHeader = preset.pallyGroupHeader
+    end
+    if not ImYOURhealerDB.messages.pallyGroupHint or ImYOURhealerDB.messages.pallyGroupHint == "" then
+        ImYOURhealerDB.messages.pallyGroupHint = preset.pallyGroupHint
+    end
+    if not ImYOURhealerDB.messages.pallyGroupChange or ImYOURhealerDB.messages.pallyGroupChange == "" then
+        ImYOURhealerDB.messages.pallyGroupChange = preset.pallyGroupChange
+    end
 end
 
 local function resetMessagesToLanguagePreset()
@@ -584,6 +683,16 @@ local function resetMessagesToLanguagePreset()
     ImYOURhealerDB.messages.rerun = preset.rerun
     ImYOURhealerDB.messages.farewell = preset.farewell
     ImYOURhealerDB.messages.manaLow = preset.manaLow
+    ImYOURhealerDB.messages.rangeAlert = preset.rangeAlert
+    ImYOURhealerDB.messages.manaInnervate = preset.manaInnervate
+    ImYOURhealerDB.messages.manaPotReady = preset.manaPotReady
+    ImYOURhealerDB.messages.manaPotCd = preset.manaPotCd
+    ImYOURhealerDB.messages.silenceSeconds = preset.silenceSeconds
+    ImYOURhealerDB.messages.silenceUnknown = preset.silenceUnknown
+    ImYOURhealerDB.messages.silenceInterrupt = preset.silenceInterrupt
+    ImYOURhealerDB.messages.pallyGroupHeader = preset.pallyGroupHeader
+    ImYOURhealerDB.messages.pallyGroupHint = preset.pallyGroupHint
+    ImYOURhealerDB.messages.pallyGroupChange = preset.pallyGroupChange
 end
 
 local function printMsg(msg)
@@ -643,6 +752,16 @@ local function clearLogs()
     printMsg(L.log_cleared)
 end
 
+local function sanitizeChatText(msg)
+    if msg == nil then
+        return ""
+    end
+    local out = tostring(msg)
+    out = string.gsub(out, "|", "||")
+    out = string.gsub(out, "[\r\n]", " ")
+    return out
+end
+
 -- External call safety: we always verify chat state and use a fallback channel.
 local function getOutputChannel()
     if ImYOURhealerDB.testMode then
@@ -662,9 +781,21 @@ local function safeSend(msg)
     end
 
     local channel = getOutputChannel()
-    SendChatMessage(msg, channel)
-    logInfo(string.format("SendChatMessage channel=%s msg=%s", tostring(channel), tostring(msg)))
-    dprint(string.format("Sent message to %s: %s", channel, msg))
+    local text = sanitizeChatText(msg)
+    SendChatMessage(text, channel)
+    logInfo(string.format("SendChatMessage channel=%s msg=%s", tostring(channel), tostring(text)))
+    dprint(string.format("Sent message to %s: %s", channel, text))
+end
+
+local function safeSendDelayed(msg, delaySec)
+    local delay = tonumber(delaySec) or 0
+    if delay > 0 and type(C_Timer) == "table" and type(C_Timer.After) == "function" then
+        C_Timer.After(delay, function()
+            safeSend(msg)
+        end)
+        return
+    end
+    safeSend(msg)
 end
 
 local function isHeroicDifficulty(difficultyID, difficultyName)
@@ -883,9 +1014,9 @@ local function maybeAnnounceSilenceByAura(destGUID, spellName, auraType)
     end
     local rem = getPlayerDebuffRemaining(spellName)
     if rem and rem > 0 then
-        safeSend(string.format(L.silence_msg_seconds, rem, spellName))
+        safeSend(string.format(ImYOURhealerDB.messages.silenceSeconds or L.silence_msg_seconds, rem, spellName))
     else
-        safeSend(string.format(L.silence_msg_unknown, spellName or "?"))
+        safeSend(string.format(ImYOURhealerDB.messages.silenceUnknown or L.silence_msg_unknown, spellName or "?"))
     end
     state.lastSilenceAlertAt = now
 end
@@ -905,7 +1036,7 @@ local function maybeAnnounceSilenceByInterrupt(destGUID, spellID, spellName)
     if (now - (state.lastSilenceAlertAt or 0)) < 2 then
         return
     end
-    safeSend(string.format(L.silence_msg_interrupt, seconds, spellName or "Interrupt"))
+    safeSend(string.format(ImYOURhealerDB.messages.silenceInterrupt or L.silence_msg_interrupt, seconds, spellName or "Interrupt"))
     state.lastSilenceAlertAt = now
 end
 
@@ -989,7 +1120,15 @@ local function buildGroupUnits()
             end
         end
     else
-        local n = GetNumSubgroupMembers and GetNumSubgroupMembers() or 0
+        local n = 0
+        if type(GetNumSubgroupMembers) == "function" then
+            n = tonumber(GetNumSubgroupMembers()) or 0
+        elseif type(GetNumPartyMembers) == "function" then
+            n = tonumber(GetNumPartyMembers()) or 0
+        elseif type(GetNumGroupMembers) == "function" and IsInGroup() then
+            n = (tonumber(GetNumGroupMembers()) or 1) - 1
+        end
+        if n < 0 then n = 0 end
         for i = 1, n do
             local u = "party" .. i
             if UnitExists(u) then
@@ -998,6 +1137,52 @@ local function buildGroupUnits()
         end
     end
     return out
+end
+
+local function addUnique(list, value)
+    if not value or value == "" then
+        return
+    end
+    for _, v in ipairs(list) do
+        if v == value then
+            return
+        end
+    end
+    table.insert(list, value)
+end
+
+local function sendWhisperMessage(msg, target)
+    local text = sanitizeChatText(msg)
+    local lang = (type(GetDefaultLanguage) == "function" and GetDefaultLanguage("player")) or nil
+    local ok, err = pcall(SendChatMessage, text, "WHISPER", lang, target)
+    if ok then
+        return true
+    end
+    ok, err = pcall(SendChatMessage, text, "WHISPER", nil, target)
+    return ok, err
+end
+
+local function getWhisperTargetsByUnit(unit)
+    local targets = {}
+    local n1, r1 = UnitName(unit)
+    local n2, r2 = nil, nil
+    if type(UnitFullName) == "function" then
+        n2, r2 = UnitFullName(unit)
+    end
+    local playerName = n2 or n1
+    if not playerName or playerName == "" then
+        return nil, nil
+    end
+
+    local realm = r2 or r1
+    if realm and realm ~= "" then
+        local realmToken = string.gsub(realm, "[%s%-']", "")
+        if realmToken ~= "" then
+            addUnique(targets, playerName .. "-" .. realmToken)
+        end
+    end
+    addUnique(targets, playerName)
+    return targets, playerName
 end
 
 local function isOutOfRange(unit)
@@ -1045,7 +1230,8 @@ local function updateRangeAlerts()
                     tracker.outSince = now
                 end
                 if not tracker.sent and (now - tracker.outSince) >= threshold then
-                    safeSend(string.format(L.range_alert_message, name, threshold))
+                    local tpl = ImYOURhealerDB.messages.rangeAlert or L.range_alert_message
+                    safeSend(string.format(tpl, name, threshold))
                     tracker.sent = true
                 end
             else
@@ -1093,13 +1279,13 @@ local function getManaPotionStatusText()
         end
     end
     if not bestItem then
-        return L.mana_pot_cd
+        return ImYOURhealerDB.messages.manaPotCd or L.mana_pot_cd
     end
     local start, duration = GetItemCooldown(bestItem)
     if not start or not duration or start == 0 or duration == 0 then
-        return L.mana_pot_ready
+        return ImYOURhealerDB.messages.manaPotReady or L.mana_pot_ready
     end
-    return L.mana_pot_cd
+    return ImYOURhealerDB.messages.manaPotCd or L.mana_pot_cd
 end
 
 local function updateManaAlerts()
@@ -1135,7 +1321,7 @@ local function updateManaAlerts()
     if manaPct <= threshold and (now - (state.lastManaAlertAt or 0)) >= cooldownSec then
         safeSend(ImYOURhealerDB.messages.manaLow or L.mana_alert_default)
         if ImYOURhealerDB.manaInnervateHintEnabled and groupHasDruid() then
-            safeSend(L.mana_innervate_text)
+            safeSend(ImYOURhealerDB.messages.manaInnervate or L.mana_innervate_text)
         end
         if ImYOURhealerDB.manaPotStatusEnabled then
             safeSend(getManaPotionStatusText())
@@ -1154,7 +1340,7 @@ end
 local function triggerManaAlertTest()
     safeSend(ImYOURhealerDB.messages.manaLow or L.mana_alert_default)
     if ImYOURhealerDB.manaInnervateHintEnabled and groupHasDruid() then
-        safeSend(L.mana_innervate_text)
+        safeSend(ImYOURhealerDB.messages.manaInnervate or L.mana_innervate_text)
     end
     if ImYOURhealerDB.manaPotStatusEnabled then
         safeSend(getManaPotionStatusText())
@@ -1295,37 +1481,91 @@ local function getPallyPowerAssignmentForPlayer(playerName)
     return bestSpell, bestBy
 end
 
-local function sendPallyPowerWhispers(runKey)
-    if not ImYOURhealerDB.pallyPowerWhisperEnabled then
-        return true
-    end
-    if ImYOURhealerDB.pallyPowerWhisperRuns[runKey] then
-        return true
+local function buildPallyPowerRoster()
+    local roster = {}
+    local seen = {}
+    local function addUnit(unit)
+        if not unit or not UnitExists(unit) then
+            return
+        end
+        local name = UnitName(unit)
+        local key = normalizeName(name)
+        if key == "" or seen[key] then
+            return
+        end
+        seen[key] = true
+        table.insert(roster, { unit = unit, name = name })
     end
 
-    if not pallyPowerReady() then
-        dprint(L.pallypower_missing)
-        return false
+    addUnit("player")
+    for _, unit in ipairs(buildGroupUnits()) do
+        addUnit(unit)
+    end
+    return roster
+end
+
+local function sendPallyPowerWhispers(runKey, force)
+    if not ImYOURhealerDB.pallyPowerWhisperEnabled then
+        return false, 0, "disabled"
+    end
+    if not force and ImYOURhealerDB.pallyPowerWhisperRuns[runKey] then
+        return true, 0, "already_sent"
     end
 
     local sentCount = 0
-    for _, unit in ipairs(buildGroupUnits()) do
-        local name = UnitName(unit)
-        if name then
-            local spell, by = getPallyPowerAssignmentForPlayer(name)
-            local text
-            if spell then
-                text = string.format("%s %s (%s). %s", L.pallypower_whisper_header, spell, shortName(by or "?"), L.pallypower_whisper_hint)
-            else
-                text = string.format("%s %s. %s", L.pallypower_whisper_header, L.pallypower_missing, L.pallypower_whisper_hint)
-            end
-            SendChatMessage(text, "WHISPER", nil, name)
-            sentCount = sentCount + 1
-        end
+    local roster = buildPallyPowerRoster()
+    if #roster == 0 then
+        return true, 0, "empty"
     end
+    local ppReady = pallyPowerReady()
+    if not ppReady then
+        dprint(L.pallypower_missing)
+    end
+    safeSend(ImYOURhealerDB.messages.pallyGroupHeader or L.pallypower_group_header)
+    for _, entry in ipairs(roster) do
+        local playerName = entry.name
+        local text = string.format(L.pallypower_group_line_missing, shortName(playerName or "?"))
+        if ppReady then
+            local okAssign, spell, by = pcall(getPallyPowerAssignmentForPlayer, playerName)
+            if not okAssign then
+                logError("getPallyPowerAssignmentForPlayer failed: " .. tostring(spell))
+                dprint("PP assign error for " .. tostring(playerName) .. ": " .. tostring(spell))
+            elseif spell then
+                text = string.format(L.pallypower_group_line, shortName(playerName), tostring(spell), shortName(by or "?"))
+            end
+        end
+        safeSend(text)
+        sentCount = sentCount + 1
+    end
+    safeSendDelayed(ImYOURhealerDB.messages.pallyGroupHint or L.pallypower_group_hint or L.pallypower_whisper_usage, 0.8)
     ImYOURhealerDB.pallyPowerWhisperRuns[runKey] = time()
-    dprint(string.format("PallyPower whisper run=%s count=%d", tostring(runKey), sentCount))
-    return true
+    dprint(string.format("PallyPower group run=%s count=%d ready=%s", tostring(runKey), sentCount, tostring(ppReady)))
+    return true, sentCount, (ppReady and "ok" or "missing")
+end
+
+local function triggerPallyPowerWhispersNow()
+    local key = string.format("manual-%.3f", (GetTime and GetTime()) or time())
+    dprint(string.format("Manual pally info trigger key=%s inGroup=%s raid=%s units=%d", key, tostring(IsInGroup()), tostring(IsInRaid()), #buildGroupUnits()))
+    local okCall, ok, count, reason = pcall(sendPallyPowerWhispers, key, true)
+    if not okCall then
+        logError("triggerPallyPowerWhispersNow failed: " .. tostring(ok))
+        printMsg("PallyPower manual whisper error: " .. tostring(ok))
+        return
+    end
+    if not ok then
+        state.pendingPallyWhisperRunKey = key
+        if reason == "disabled" then
+            printMsg(L.pallypower_manual_off)
+        else
+            printMsg(L.pallypower_missing)
+        end
+        return
+    end
+    if (count or 0) > 0 then
+        printMsg(string.format(L.pallypower_manual_sent, count))
+    else
+        printMsg(L.pallypower_manual_none)
+    end
 end
 
 local function getBlessingIndexFromWhisper(request)
@@ -1341,7 +1581,17 @@ local function getBlessingIndexFromWhisper(request)
     return map[r]
 end
 
-local function handleWhisperRequest(msg, sender)
+local function sendPallyPowerCommandResponse(replyChannel, sender, text)
+    local message = sanitizeChatText(text)
+    if replyChannel == "WHISPER" then
+        SendChatMessage(message, "WHISPER", nil, sender)
+        return
+    end
+    safeSend(string.format("%s: %s", shortName(sender or "?"), message))
+end
+
+local function handleWhisperRequest(msg, sender, replyChannel)
+    local channel = replyChannel or "WHISPER"
     if not pallyPowerReady() then
         return
     end
@@ -1354,7 +1604,7 @@ local function handleWhisperRequest(msg, sender)
     cleaned = string.gsub(cleaned, "^%s+", "")
     cleaned = string.gsub(cleaned, "%s+$", "")
     if cleaned == "pp" then
-        SendChatMessage(L.pallypower_whisper_usage, "WHISPER", nil, sender)
+        sendPallyPowerCommandResponse(channel, sender, L.pallypower_whisper_usage)
         return
     end
     if not ImYOURhealerDB.pallyPowerWhisperApplyEnabled then
@@ -1367,20 +1617,20 @@ local function handleWhisperRequest(msg, sender)
 
     local buffIndex = getBlessingIndexFromWhisper(keyword)
     if not buffIndex then
-        SendChatMessage(L.pallypower_whisper_invalid, "WHISPER", nil, sender)
+        sendPallyPowerCommandResponse(channel, sender, L.pallypower_whisper_invalid)
         return
     end
 
     local unit = findGroupUnitByPlayerName(sender)
     if not unit then
-        SendChatMessage(L.pallypower_whisper_fail, "WHISPER", nil, sender)
+        sendPallyPowerCommandResponse(channel, sender, L.pallypower_whisper_fail)
         return
     end
     local tname = UnitName(unit)
     local _, targetClassToken = UnitClass(unit)
     local classID = targetClassToken and PallyPower.ClassToID[targetClassToken]
     if not tname or not classID then
-        SendChatMessage(L.pallypower_whisper_fail, "WHISPER", nil, sender)
+        sendPallyPowerCommandResponse(channel, sender, L.pallypower_whisper_fail)
         return
     end
 
@@ -1421,10 +1671,11 @@ local function handleWhisperRequest(msg, sender)
     if type(PallyPower.UpdateLayout) == "function" then
         PallyPower:UpdateLayout()
     end
-    SendChatMessage(L.pallypower_whisper_ack, "WHISPER", nil, sender)
+    sendPallyPowerCommandResponse(channel, sender, L.pallypower_whisper_ack)
     if previous ~= (tonumber(buffIndex) or buffIndex) then
         local spellName = (PallyPower.Spells and PallyPower.Spells[buffIndex]) or (PallyPower.GSpells and PallyPower.GSpells[buffIndex]) or tostring(buffIndex)
-        safeSend(string.format(L.pallypower_group_change, shortName(sender), tostring(spellName)))
+        local changeTpl = ImYOURhealerDB.messages.pallyGroupChange or L.pallypower_group_change
+        safeSend(string.format(changeTpl, shortName(sender), tostring(spellName)))
     end
 end
 
@@ -1628,6 +1879,10 @@ local function sendRunStartMessages(runKey)
     end
     ImYOURhealerDB.greetedRuns[runKey] = time()
     safeSend(formatGreeting())
+    if not ImYOURhealerDB.pallyPowerWhisperEnabled then
+        state.pendingPallyWhisperRunKey = nil
+        return
+    end
     local ppOK = sendPallyPowerWhispers(runKey)
     if not ppOK then
         state.pendingPallyWhisperRunKey = runKey
@@ -1670,6 +1925,10 @@ local function processPendingPallyWhispers()
     if not runKey then
         return
     end
+    if not ImYOURhealerDB.pallyPowerWhisperEnabled then
+        state.pendingPallyWhisperRunKey = nil
+        return
+    end
     if runKey ~= state.currentRunKey then
         state.pendingPallyWhisperRunKey = nil
         return
@@ -1680,6 +1939,52 @@ local function processPendingPallyWhispers()
     end
     if sendPallyPowerWhispers(runKey) then
         state.pendingPallyWhisperRunKey = nil
+    end
+end
+
+local function processExpiredWhisperFallbacks()
+    local now = (GetTime and GetTime()) or 0
+    for key, item in pairs(state.pendingWhisperFallbacks) do
+        if not item or not item.expiresAt or item.expiresAt <= now then
+            state.pendingWhisperFallbacks[key] = nil
+        end
+    end
+end
+
+local function handleSystemWhisperFailure(msg)
+    local lower = string.lower(msg or "")
+    local looksLikeNoPlayer = string.find(lower, "no player named", 1, true)
+        or string.find(lower, "is not online", 1, true)
+        or string.find(lower, "isn't online", 1, true)
+        or string.find(lower, "kein spieler namens", 1, true)
+        or string.find(lower, "nicht online", 1, true)
+    if not looksLikeNoPlayer then
+        return
+    end
+
+    for key, item in pairs(state.pendingWhisperFallbacks) do
+        if item and item.targets and item.index and item.targets[item.index] then
+            local currentTarget = item.targets[item.index]
+            local currentLower = string.lower(currentTarget or "")
+            local shortLower = string.lower(string.match(currentTarget or "", "^[^-]+") or currentTarget or "")
+            if (currentLower ~= "" and string.find(lower, currentLower, 1, true))
+                or (shortLower ~= "" and string.find(lower, shortLower, 1, true)) then
+                if item.index < #item.targets then
+                    item.index = item.index + 1
+                    local retryTarget = item.targets[item.index]
+                    local okSend, sendErr = sendWhisperMessage(item.text, retryTarget)
+                    if okSend then
+                        dprint("Whisper fallback attempted to " .. tostring(retryTarget))
+                    else
+                        dprint("Whisper fallback failed to " .. tostring(retryTarget) .. ": " .. tostring(sendErr))
+                        state.pendingWhisperFallbacks[key] = nil
+                    end
+                else
+                    state.pendingWhisperFallbacks[key] = nil
+                end
+                return
+            end
+        end
     end
 end
 
@@ -1828,6 +2133,7 @@ createConfigUI = function()
     pages[1] = makePage()
     pages[2] = makePage()
     pages[3] = makePage()
+    pages[4] = makePage()
 
     local mainTabs = {}
     local function setTabSelected(btn, selected)
@@ -1872,19 +2178,30 @@ createConfigUI = function()
     tabCooldowns:SetScript("OnClick", function() selectMainTab(2) end)
     mainTabs[2] = tabCooldowns
 
-    local tabTests = CreateFrame("Button", UI_FRAME_NAME .. "Tab3", frame, "GameMenuButtonTemplate")
-    tabTests:SetID(3)
+    local tabTexts = CreateFrame("Button", UI_FRAME_NAME .. "Tab3", frame, "GameMenuButtonTemplate")
+    tabTexts:SetID(3)
+    tabTexts:SetSize(120, 24)
+    tabTexts:SetText(L.ui_tab_texts)
+    tabTexts:SetPoint("LEFT", tabCooldowns, "RIGHT", 6, 0)
+    tabTexts:SetScript("OnClick", function() selectMainTab(3) end)
+    mainTabs[3] = tabTexts
+
+    local tabTests = CreateFrame("Button", UI_FRAME_NAME .. "Tab4", frame, "GameMenuButtonTemplate")
+    tabTests:SetID(4)
     tabTests:SetSize(120, 24)
     tabTests:SetText(L.ui_tab_tests)
-    tabTests:SetPoint("LEFT", tabCooldowns, "RIGHT", 6, 0)
-    tabTests:SetScript("OnClick", function() selectMainTab(3) end)
-    mainTabs[3] = tabTests
+    tabTests:SetPoint("LEFT", tabTexts, "RIGHT", 6, 0)
+    tabTests:SetScript("OnClick", function() selectMainTab(4) end)
+    mainTabs[4] = tabTests
 
     -- Page 1: General
     local general = pages[1]
-    local y = -8
+    local leftX = 0
+    local rightX = 340
+    local rowStep = 32
+    local yTop = -8
 
-    createLabel(general, L.language, 0, y)
+    createLabel(general, L.language, leftX, yTop)
     local langDD = createDropdown(general, 130, {
         { key = "de", label = "Deutsch" },
         { key = "en", label = "English" },
@@ -1899,32 +2216,35 @@ createConfigUI = function()
         toggleConfigUI(true)
         printMsg(L.lang_set .. ": " .. key)
     end)
-    langDD:SetPoint("TOPLEFT", general, "TOPLEFT", 100, y + 10)
+    langDD:SetPoint("TOPLEFT", general, "TOPLEFT", 100, yTop + 10)
     UIDropDownMenu_SetSelectedValue(langDD, ImYOURhealerDB.language)
 
-    y = y - 48
+    local leftY = yTop - 50
+    local rightY = yTop - 50
 
     local keyCheckCB = CreateFrame("CheckButton", "ImYOURhealerKeyCheckCB", general, "UICheckButtonTemplate")
-    keyCheckCB:SetPoint("TOPLEFT", general, "TOPLEFT", 0, y)
+    keyCheckCB:SetPoint("TOPLEFT", general, "TOPLEFT", leftX, leftY)
     setCheckButtonLabel(keyCheckCB, L.key_check)
     keyCheckCB:SetChecked(ImYOURhealerDB.keyCheckEnabled)
     keyCheckCB:SetScript("OnClick", function(self)
         ImYOURhealerDB.keyCheckEnabled = self:GetChecked() and true or false
         printMsg(ImYOURhealerDB.keyCheckEnabled and L.key_check_on or L.key_check_off)
     end)
+    leftY = leftY - rowStep
 
     local waitAllCB = CreateFrame("CheckButton", "ImYOURhealerWaitAllCB", general, "UICheckButtonTemplate")
-    waitAllCB:SetPoint("TOPLEFT", general, "TOPLEFT", 300, y)
+    waitAllCB:SetPoint("TOPLEFT", general, "TOPLEFT", rightX, rightY)
     setCheckButtonLabel(waitAllCB, L.wait_all_in_instance)
     waitAllCB:SetChecked(ImYOURhealerDB.waitAllInInstance)
     waitAllCB:SetScript("OnClick", function(self)
         ImYOURhealerDB.waitAllInInstance = self:GetChecked() and true or false
     end)
+    rightY = rightY - rowStep
 
-    createLabel(general, L.wait_all_timeout, 300, y - 21)
+    createLabel(general, L.wait_all_timeout, rightX + 22, rightY + 3)
     local waitTimeoutBox = CreateFrame("EditBox", "ImYOURhealerWaitTimeoutBox", general, "InputBoxTemplate")
     waitTimeoutBox:SetSize(48, 20)
-    waitTimeoutBox:SetPoint("TOPLEFT", general, "TOPLEFT", 450, y - 20)
+    waitTimeoutBox:SetPoint("TOPLEFT", general, "TOPLEFT", rightX + 190, rightY + 4)
     waitTimeoutBox:SetAutoFocus(false)
     waitTimeoutBox:SetNumeric(true)
     waitTimeoutBox:SetMaxLetters(3)
@@ -1944,22 +2264,22 @@ createConfigUI = function()
         end
         self:SetText(tostring(ImYOURhealerDB.waitAllInInstanceTimeout or 20))
     end)
-
-    y = y - 24
+    rightY = rightY - rowStep
 
     local rangeCB = CreateFrame("CheckButton", "ImYOURhealerRangeCB", general, "UICheckButtonTemplate")
-    rangeCB:SetPoint("TOPLEFT", general, "TOPLEFT", 0, y)
+    rangeCB:SetPoint("TOPLEFT", general, "TOPLEFT", leftX, leftY)
     setCheckButtonLabel(rangeCB, L.range_alert)
     rangeCB:SetChecked(ImYOURhealerDB.rangeAlertEnabled)
     rangeCB:SetScript("OnClick", function(self)
         ImYOURhealerDB.rangeAlertEnabled = self:GetChecked() and true or false
         printMsg(ImYOURhealerDB.rangeAlertEnabled and L.range_alert_on or L.range_alert_off)
     end)
+    leftY = leftY - rowStep
 
-    createLabel(general, L.range_alert_seconds, 300, y + 3)
+    createLabel(general, L.range_alert_seconds, rightX + 22, rightY + 3)
     local rangeSecondsBox = CreateFrame("EditBox", "ImYOURhealerRangeSecondsBox", general, "InputBoxTemplate")
     rangeSecondsBox:SetSize(48, 20)
-    rangeSecondsBox:SetPoint("TOPLEFT", general, "TOPLEFT", 450, y + 4)
+    rangeSecondsBox:SetPoint("TOPLEFT", general, "TOPLEFT", rightX + 190, rightY + 4)
     rangeSecondsBox:SetAutoFocus(false)
     rangeSecondsBox:SetNumeric(true)
     rangeSecondsBox:SetMaxLetters(2)
@@ -1980,21 +2300,21 @@ createConfigUI = function()
         end
         self:SetText(tostring(ImYOURhealerDB.rangeAlertSeconds or 4))
     end)
-
-    y = y - 24
+    rightY = rightY - rowStep
 
     local manaCB = CreateFrame("CheckButton", "ImYOURhealerManaCB", general, "UICheckButtonTemplate")
-    manaCB:SetPoint("TOPLEFT", general, "TOPLEFT", 0, y)
+    manaCB:SetPoint("TOPLEFT", general, "TOPLEFT", leftX, leftY)
     setCheckButtonLabel(manaCB, L.mana_alert)
     manaCB:SetChecked(ImYOURhealerDB.manaAlertEnabled)
     manaCB:SetScript("OnClick", function(self)
         ImYOURhealerDB.manaAlertEnabled = self:GetChecked() and true or false
     end)
+    leftY = leftY - rowStep
 
-    createLabel(general, L.mana_alert_threshold, 300, y + 3)
+    createLabel(general, L.mana_alert_threshold, rightX + 22, rightY + 3)
     local manaThresholdBox = CreateFrame("EditBox", "ImYOURhealerManaThresholdBox", general, "InputBoxTemplate")
     manaThresholdBox:SetSize(48, 20)
-    manaThresholdBox:SetPoint("TOPLEFT", general, "TOPLEFT", 450, y + 4)
+    manaThresholdBox:SetPoint("TOPLEFT", general, "TOPLEFT", rightX + 190, rightY + 4)
     manaThresholdBox:SetAutoFocus(false)
     manaThresholdBox:SetNumeric(true)
     manaThresholdBox:SetMaxLetters(2)
@@ -2014,11 +2334,12 @@ createConfigUI = function()
         end
         self:SetText(tostring(ImYOURhealerDB.manaAlertThreshold or 20))
     end)
+    rightY = rightY - rowStep
 
-    createLabel(general, L.mana_alert_cooldown, 300, y - 21)
+    createLabel(general, L.mana_alert_cooldown, rightX + 22, rightY + 3)
     local manaCooldownBox = CreateFrame("EditBox", "ImYOURhealerManaCooldownBox", general, "InputBoxTemplate")
     manaCooldownBox:SetSize(48, 20)
-    manaCooldownBox:SetPoint("TOPLEFT", general, "TOPLEFT", 450, y - 20)
+    manaCooldownBox:SetPoint("TOPLEFT", general, "TOPLEFT", rightX + 190, rightY + 4)
     manaCooldownBox:SetAutoFocus(false)
     manaCooldownBox:SetNumeric(true)
     manaCooldownBox:SetMaxLetters(3)
@@ -2038,88 +2359,96 @@ createConfigUI = function()
         end
         self:SetText(tostring(ImYOURhealerDB.manaAlertCooldownSeconds or 30))
     end)
+    rightY = rightY - rowStep
 
-    createLabel(general, L.mana_alert_scope, 300, y - 43)
+    createLabel(general, L.mana_alert_scope, rightX + 22, rightY + 3)
     local manaScopeDD = createDropdown(general, 190, {
         { key = "group", label = L.mana_scope_group },
         { key = "instance", label = L.mana_scope_instance },
     }, function(key)
         ImYOURhealerDB.manaAlertScope = key
     end)
-    manaScopeDD:SetPoint("TOPLEFT", general, "TOPLEFT", 375, y - 34)
+    manaScopeDD:SetPoint("TOPLEFT", general, "TOPLEFT", rightX + 50, rightY + 12)
     UIDropDownMenu_SetSelectedValue(manaScopeDD, ImYOURhealerDB.manaAlertScope or "group")
-
-    y = y - 24
+    rightY = rightY - rowStep
 
     local manaInnervateCB = CreateFrame("CheckButton", "ImYOURhealerManaInnervateCB", general, "UICheckButtonTemplate")
-    manaInnervateCB:SetPoint("TOPLEFT", general, "TOPLEFT", 0, y)
+    manaInnervateCB:SetPoint("TOPLEFT", general, "TOPLEFT", leftX, leftY)
     setCheckButtonLabel(manaInnervateCB, L.mana_innervate_hint)
     manaInnervateCB:SetChecked(ImYOURhealerDB.manaInnervateHintEnabled)
     manaInnervateCB:SetScript("OnClick", function(self)
         ImYOURhealerDB.manaInnervateHintEnabled = self:GetChecked() and true or false
     end)
+    leftY = leftY - rowStep
 
     local manaPotCB = CreateFrame("CheckButton", "ImYOURhealerManaPotCB", general, "UICheckButtonTemplate")
-    manaPotCB:SetPoint("TOPLEFT", general, "TOPLEFT", 300, y)
+    manaPotCB:SetPoint("TOPLEFT", general, "TOPLEFT", rightX, rightY)
     setCheckButtonLabel(manaPotCB, L.mana_pot_status)
     manaPotCB:SetChecked(ImYOURhealerDB.manaPotStatusEnabled)
     manaPotCB:SetScript("OnClick", function(self)
         ImYOURhealerDB.manaPotStatusEnabled = self:GetChecked() and true or false
     end)
-
-    y = y - 24
+    rightY = rightY - rowStep
 
     local innervateThanksCB = CreateFrame("CheckButton", "ImYOURhealerInnervateThanksCB", general, "UICheckButtonTemplate")
-    innervateThanksCB:SetPoint("TOPLEFT", general, "TOPLEFT", 0, y)
+    innervateThanksCB:SetPoint("TOPLEFT", general, "TOPLEFT", leftX, leftY)
     setCheckButtonLabel(innervateThanksCB, L.innervate_thanks)
     innervateThanksCB:SetChecked(ImYOURhealerDB.autoThankInnervate)
     innervateThanksCB:SetScript("OnClick", function(self)
         ImYOURhealerDB.autoThankInnervate = self:GetChecked() and true or false
     end)
-
-    y = y - 24
+    leftY = leftY - rowStep
 
     local cooldownCB = CreateFrame("CheckButton", "ImYOURhealerCooldownCB", general, "UICheckButtonTemplate")
-    cooldownCB:SetPoint("TOPLEFT", general, "TOPLEFT", 0, y)
+    cooldownCB:SetPoint("TOPLEFT", general, "TOPLEFT", leftX, leftY)
     setCheckButtonLabel(cooldownCB, L.cooldown_announce)
     cooldownCB:SetChecked(ImYOURhealerDB.cooldownAnnounceEnabled)
     cooldownCB:SetScript("OnClick", function(self)
         ImYOURhealerDB.cooldownAnnounceEnabled = self:GetChecked() and true or false
         printMsg(ImYOURhealerDB.cooldownAnnounceEnabled and L.cooldown_on or L.cooldown_off)
     end)
+    leftY = leftY - rowStep
 
     local silenceCB = CreateFrame("CheckButton", "ImYOURhealerSilenceCB", general, "UICheckButtonTemplate")
-    silenceCB:SetPoint("TOPLEFT", general, "TOPLEFT", 300, y)
+    silenceCB:SetPoint("TOPLEFT", general, "TOPLEFT", rightX, rightY)
     setCheckButtonLabel(silenceCB, L.silence_alert)
     silenceCB:SetChecked(ImYOURhealerDB.silenceAlertEnabled)
     silenceCB:SetScript("OnClick", function(self)
         ImYOURhealerDB.silenceAlertEnabled = self:GetChecked() and true or false
         printMsg(ImYOURhealerDB.silenceAlertEnabled and L.silence_on or L.silence_off)
     end)
-
-    y = y - 24
+    rightY = rightY - rowStep
 
     local pallyCB = CreateFrame("CheckButton", "ImYOURhealerPallyWhisperCB", general, "UICheckButtonTemplate")
-    pallyCB:SetPoint("TOPLEFT", general, "TOPLEFT", 0, y)
+    pallyCB:SetPoint("TOPLEFT", general, "TOPLEFT", leftX, leftY)
     setCheckButtonLabel(pallyCB, L.pallypower_sync)
     pallyCB:SetChecked(ImYOURhealerDB.pallyPowerWhisperEnabled)
     pallyCB:SetScript("OnClick", function(self)
         ImYOURhealerDB.pallyPowerWhisperEnabled = self:GetChecked() and true or false
         printMsg(ImYOURhealerDB.pallyPowerWhisperEnabled and L.pallypower_on or L.pallypower_off)
     end)
+    leftY = leftY - rowStep
 
     local pallyApplyCB = CreateFrame("CheckButton", "ImYOURhealerPallyApplyCB", general, "UICheckButtonTemplate")
-    pallyApplyCB:SetPoint("TOPLEFT", general, "TOPLEFT", 300, y)
+    pallyApplyCB:SetPoint("TOPLEFT", general, "TOPLEFT", rightX, rightY)
     setCheckButtonLabel(pallyApplyCB, L.pallypower_whisper_apply)
     pallyApplyCB:SetChecked(ImYOURhealerDB.pallyPowerWhisperApplyEnabled)
     pallyApplyCB:SetScript("OnClick", function(self)
         ImYOURhealerDB.pallyPowerWhisperApplyEnabled = self:GetChecked() and true or false
         printMsg(ImYOURhealerDB.pallyPowerWhisperApplyEnabled and L.pallypower_apply_on or L.pallypower_apply_off)
     end)
+    rightY = rightY - rowStep
 
-    y = y - 28
+    local pallyManualBtn = CreateFrame("Button", nil, general, "GameMenuButtonTemplate")
+    pallyManualBtn:SetSize(230, 24)
+    pallyManualBtn:SetPoint("TOPLEFT", general, "TOPLEFT", rightX, rightY)
+    pallyManualBtn:SetText(L.pallypower_manual_button)
+    pallyManualBtn:SetScript("OnClick", function()
+        triggerPallyPowerWhispersNow()
+    end)
+    rightY = rightY - 44
 
-    createLabel(general, L.trigger_mode, 0, y)
+    createLabel(general, L.trigger_mode, leftX, leftY - 6)
     local triggerDD = createDropdown(general, 250, {
         { key = "endboss_or_all", label = L.trigger_endboss_or_all },
         { key = "endboss_only", label = L.trigger_endboss_only },
@@ -2127,71 +2456,8 @@ createConfigUI = function()
     }, function(key)
         ImYOURhealerDB.triggerMode = key
     end)
-    triggerDD:SetPoint("TOPLEFT", general, "TOPLEFT", 140, y + 10)
+    triggerDD:SetPoint("TOPLEFT", general, "TOPLEFT", 140, leftY + 4)
     UIDropDownMenu_SetSelectedValue(triggerDD, ImYOURhealerDB.triggerMode)
-
-    y = y - 30
-
-    createLabel(general, L.greeting_message, 0, y)
-    local greetBox = createEditBox(general, 560, 32)
-    greetBox:SetPoint("TOPLEFT", general, "TOPLEFT", 0, y - 18)
-    greetBox:SetText(ImYOURhealerDB.messages.greeting)
-    greetBox:SetScript("OnTextChanged", function(self)
-        ImYOURhealerDB.messages.greeting = self:GetText()
-    end)
-
-    y = y - 56
-
-    createLabel(general, L.finish_message, 0, y)
-    local finishBox = createEditBox(general, 560, 32)
-    finishBox:SetPoint("TOPLEFT", general, "TOPLEFT", 0, y - 18)
-    finishBox:SetText(ImYOURhealerDB.messages.finish)
-    finishBox:SetScript("OnTextChanged", function(self)
-        ImYOURhealerDB.messages.finish = self:GetText()
-    end)
-
-    y = y - 56
-
-    createLabel(general, L.rerun_message, 0, y)
-    local rerunBox = createEditBox(general, 560, 32)
-    rerunBox:SetPoint("TOPLEFT", general, "TOPLEFT", 0, y - 18)
-    rerunBox:SetText(ImYOURhealerDB.messages.rerun)
-    rerunBox:SetScript("OnTextChanged", function(self)
-        ImYOURhealerDB.messages.rerun = self:GetText()
-    end)
-
-    y = y - 56
-
-    createLabel(general, L.farewell_message, 0, y)
-    local farewellBox = createEditBox(general, 560, 32)
-    farewellBox:SetPoint("TOPLEFT", general, "TOPLEFT", 0, y - 18)
-    farewellBox:SetText(ImYOURhealerDB.messages.farewell)
-    farewellBox:SetScript("OnTextChanged", function(self)
-        ImYOURhealerDB.messages.farewell = self:GetText()
-    end)
-
-    y = y - 56
-
-    createLabel(general, L.mana_alert_text, 0, y)
-    local manaBox = createEditBox(general, 560, 32)
-    manaBox:SetPoint("TOPLEFT", general, "TOPLEFT", 0, y - 18)
-    manaBox:SetText(ImYOURhealerDB.messages.manaLow or L.mana_alert_default)
-    manaBox:SetScript("OnTextChanged", function(self)
-        ImYOURhealerDB.messages.manaLow = self:GetText()
-    end)
-
-    local resetBtn = CreateFrame("Button", nil, general, "GameMenuButtonTemplate")
-    resetBtn:SetSize(250, 24)
-    resetBtn:SetPoint("BOTTOMLEFT", general, "BOTTOMLEFT", 0, 0)
-    resetBtn:SetText(L.reset_texts)
-    resetBtn:SetScript("OnClick", function()
-        resetMessagesToLanguagePreset()
-        greetBox:SetText(ImYOURhealerDB.messages.greeting)
-        finishBox:SetText(ImYOURhealerDB.messages.finish)
-        rerunBox:SetText(ImYOURhealerDB.messages.rerun)
-        farewellBox:SetText(ImYOURhealerDB.messages.farewell)
-        manaBox:SetText(ImYOURhealerDB.messages.manaLow)
-    end)
 
     -- Page 2: Cooldowns with real class tabs
     local cooldownPage = pages[2]
@@ -2258,8 +2524,62 @@ createConfigUI = function()
     end
     showClassTab(1)
 
-    -- Page 3: Tests
-    local tests = pages[3]
+    -- Page 3: Text messages
+    local texts = pages[3]
+    local textBoxes = {}
+    local textFieldIndex = 0
+    local textColX = { 0, 286 }
+    local textStartY = -8
+    local textStepY = 66
+
+    local function addMessageField(labelText, key, fallback)
+        textFieldIndex = textFieldIndex + 1
+        local col = ((textFieldIndex - 1) % 2) + 1
+        local row = math.floor((textFieldIndex - 1) / 2)
+        local x = textColX[col]
+        local y = textStartY - (row * textStepY)
+
+        createLabel(texts, labelText, x, y)
+        local box = createEditBox(texts, 270, 28)
+        box:SetPoint("TOPLEFT", texts, "TOPLEFT", x, y - 18)
+        box:SetText(ImYOURhealerDB.messages[key] or fallback or "")
+        box:SetScript("OnTextChanged", function(self)
+            ImYOURhealerDB.messages[key] = self:GetText()
+        end)
+        textBoxes[key] = box
+    end
+
+    addMessageField(L.greeting_message, "greeting", L.greet_default)
+    addMessageField(L.finish_message, "finish", L.finish_default)
+    addMessageField(L.rerun_message, "rerun", L.rerun_default)
+    addMessageField(L.farewell_message, "farewell", L.farewell_default)
+    addMessageField(L.mana_alert_text, "manaLow", L.mana_alert_default)
+    addMessageField(L.range_alert_text, "rangeAlert", L.range_alert_message)
+    addMessageField(L.mana_innervate_text_label, "manaInnervate", L.mana_innervate_text)
+    addMessageField(L.mana_pot_ready_label, "manaPotReady", L.mana_pot_ready)
+    addMessageField(L.mana_pot_cd_label, "manaPotCd", L.mana_pot_cd)
+    addMessageField(L.silence_seconds_label, "silenceSeconds", L.silence_msg_seconds)
+    addMessageField(L.silence_unknown_label, "silenceUnknown", L.silence_msg_unknown)
+    addMessageField(L.silence_interrupt_label, "silenceInterrupt", L.silence_msg_interrupt)
+    addMessageField(L.pallypower_group_header_label, "pallyGroupHeader", L.pallypower_group_header)
+    addMessageField(L.pallypower_group_hint_label, "pallyGroupHint", L.pallypower_group_hint)
+    addMessageField(L.pallypower_group_change_label, "pallyGroupChange", L.pallypower_group_change)
+
+    local resetBtn = CreateFrame("Button", nil, texts, "GameMenuButtonTemplate")
+    resetBtn:SetSize(250, 24)
+    resetBtn:SetPoint("BOTTOMLEFT", texts, "BOTTOMLEFT", 0, 0)
+    resetBtn:SetText(L.reset_texts)
+    resetBtn:SetScript("OnClick", function()
+        resetMessagesToLanguagePreset()
+        for key, box in pairs(textBoxes) do
+            if box and box.SetText then
+                box:SetText(ImYOURhealerDB.messages[key] or "")
+            end
+        end
+    end)
+
+    -- Page 4: Tests
+    local tests = pages[4]
     local testModeCB = CreateFrame("CheckButton", "ImYOURhealerTestModeCB", tests, "UICheckButtonTemplate")
     testModeCB:SetPoint("TOPLEFT", tests, "TOPLEFT", 0, -8)
     setCheckButtonLabel(testModeCB, L.test_mode)
@@ -2329,11 +2649,7 @@ createConfigUI = function()
         end
     end)
     addTestButton(L.test_pally_whisper, 286, -244, function()
-        if state.currentRunKey then
-            sendPallyPowerWhispers(state.currentRunKey .. "#test")
-        else
-            sendPallyPowerWhispers("manual-test")
-        end
+        triggerPallyPowerWhispersNow()
     end)
     addTestButton(L.test_pally_self, 0, -274, function()
         local _, classToken = UnitClass("player")
@@ -2751,6 +3067,11 @@ addon:RegisterEvent("PLAYER_ENTERING_WORLD")
 addon:RegisterEvent("ZONE_CHANGED_NEW_AREA")
 addon:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 addon:RegisterEvent("CHAT_MSG_WHISPER")
+addon:RegisterEvent("CHAT_MSG_PARTY")
+addon:RegisterEvent("CHAT_MSG_PARTY_LEADER")
+addon:RegisterEvent("CHAT_MSG_RAID")
+addon:RegisterEvent("CHAT_MSG_RAID_LEADER")
+addon:RegisterEvent("CHAT_MSG_SYSTEM")
 addon:RegisterEvent("PLAYER_REGEN_ENABLED")
 
 addon:SetScript("OnUpdate", function(_, elapsed)
@@ -2764,6 +3085,7 @@ addon:SetScript("OnUpdate", function(_, elapsed)
         updateManaAlerts()
         processPendingRunStart()
         processPendingPallyWhispers()
+        processExpiredWhisperFallbacks()
     end
 end)
 
@@ -2830,7 +3152,25 @@ addon:SetScript("OnEvent", function(_, event, ...)
 
     if event == "CHAT_MSG_WHISPER" then
         local msg, sender = ...
-        handleWhisperRequest(msg, sender)
+        handleWhisperRequest(msg, sender, "WHISPER")
+        return
+    end
+
+    if event == "CHAT_MSG_PARTY" or event == "CHAT_MSG_PARTY_LEADER" then
+        local msg, sender = ...
+        handleWhisperRequest(msg, sender, "PARTY")
+        return
+    end
+
+    if event == "CHAT_MSG_RAID" or event == "CHAT_MSG_RAID_LEADER" then
+        local msg, sender = ...
+        handleWhisperRequest(msg, sender, "RAID")
+        return
+    end
+
+    if event == "CHAT_MSG_SYSTEM" then
+        local msg = ...
+        handleSystemWhisperFailure(msg)
         return
     end
 
