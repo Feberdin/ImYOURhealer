@@ -1,0 +1,4 @@
+# WoW addon local artifacts
+*.bak
+*.tmp
+.DS_Store

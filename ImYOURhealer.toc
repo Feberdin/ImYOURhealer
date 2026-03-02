@@ -1,0 +1,9 @@
+## Interface: 20505
+## Title: ImYOURhealer
+## Notes: Automatic healer party messages for TBC instances with UI, minimap button, and DE/EN support.
+## Author: Feberdin
+## Version: 0.1.0
+## SavedVariables: ImYOURhealerDB
+
+ImYOURhealer.lua
+ImYOURhealer_Tests.lua

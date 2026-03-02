@@ -1,0 +1,1 @@
+Automates healer-focused party communication in WoW TBC dungeons with smart run events, cooldown alerts, and PallyPower-assisted coordination.
