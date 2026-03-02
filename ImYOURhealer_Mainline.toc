@@ -1,6 +1,6 @@
-## Interface: 20505
+## Interface: 110200
 ## Title: ImYOURhealer
-## Notes: Healer automation addon for WoW Anniversary TBC and Retail with UI, minimap button, and DE/EN support.
+## Notes: Healer automation addon for WoW Retail and Anniversary TBC with UI, minimap button, and DE/EN support.
 ## Author: Feberdin
 ## Version: 1.0.1
 ## SavedVariables: ImYOURhealerDB

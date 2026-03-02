@@ -1,6 +1,6 @@
 # ImYOURhealer
 
-ImYOURhealer is a WoW TBC Classic addon that automates healer-focused party communication for dungeon runs, including run start/end flow, cooldown announcements, low-mana alerts, and optional PallyPower whisper coordination.
+ImYOURhealer is a WoW Anniversary TBC and Retail addon that automates healer-focused party communication for dungeon runs, including run start/end flow, cooldown announcements, low-mana alerts, and optional PallyPower coordination.
 
 ## Why This Addon
 Healing in dungeons often means typing the same things over and over: greeting, cooldown calls, rerun questions, and mana status. ImYOURhealer automates that communication while keeping everything configurable in a compact in-game UI.
@@ -21,10 +21,10 @@ Healing in dungeons often means typing the same things over and over: greeting, 
   - Announce mana potion ready/cooldown state
 - Auto `/thank` emote when Innervate is cast on you (target restored afterwards)
 - PallyPower integration:
-  - Whisper each group member their current assignment on instance start
-  - Apply whisper requests (`pp ...`) directly to PallyPower
+  - Post current group assignments in party chat on instance start
+  - Apply chat requests (`pp ...`) directly to PallyPower
   - Group chat message when a player changes to a different blessing
-  - `pp` whisper help supports German and English keywords
+  - `pp` help supports German and English keywords
 - Test mode (`/s` instead of `/p`) and dedicated test tab buttons
 - DE/EN language switch
 - Minimap button for quick access
@@ -32,8 +32,9 @@ Healing in dungeons often means typing the same things over and over: greeting, 
 
 ## UI Overview
 The config window is organized into tabs:
-- `General`: run flow, heroic checks, range/mana settings, message texts
+- `General`: run flow, heroic checks, range/mana settings
 - `Cooldowns`: global switch + class tabs + spell toggles
+- `Texts`: all configurable chat templates
 - `Tests`: all test buttons and utility toggles (test mode, minimap, debug, persistent log)
 
 ## Quick Start
@@ -61,7 +62,7 @@ The config window is organized into tabs:
 - `/imyh manascope group|instance`
 - `/imyh log on|off|show|clear`
 
-## PallyPower Whisper Examples
+## PallyPower Command Examples
 - `pp` -> returns usage/help text
 - `pp wisdom`
 - `pp might`

@@ -762,6 +762,63 @@ local function sanitizeChatText(msg)
     return out
 end
 
+local function getSpellNameByID(spellID)
+    if type(GetSpellInfo) == "function" then
+        return GetSpellInfo(spellID)
+    end
+    if type(C_Spell) == "table" then
+        if type(C_Spell.GetSpellName) == "function" then
+            return C_Spell.GetSpellName(spellID)
+        end
+        if type(C_Spell.GetSpellInfo) == "function" then
+            local info = C_Spell.GetSpellInfo(spellID)
+            if type(info) == "table" then
+                return info.name
+            end
+        end
+    end
+    return nil
+end
+
+local function getSpellCooldownCompat(spellID)
+    if type(GetSpellCooldown) == "function" then
+        local start, duration = GetSpellCooldown(spellID)
+        return start, duration
+    end
+    if type(C_Spell) == "table" and type(C_Spell.GetSpellCooldown) == "function" then
+        local info = C_Spell.GetSpellCooldown(spellID)
+        if type(info) == "table" then
+            return info.startTime or 0, info.duration or 0
+        end
+    end
+    return 0, 0
+end
+
+local function getItemCooldownCompat(itemID)
+    if type(GetItemCooldown) == "function" then
+        local start, duration = GetItemCooldown(itemID)
+        return start, duration
+    end
+    if type(C_Item) == "table" and type(C_Item.GetItemCooldown) == "function" then
+        local start, duration = C_Item.GetItemCooldown(itemID)
+        return start, duration
+    end
+    return 0, 0
+end
+
+local function getUnitDebuffCompat(unit, index)
+    if type(UnitDebuff) == "function" then
+        return UnitDebuff(unit, index)
+    end
+    if type(C_UnitAuras) == "table" and type(C_UnitAuras.GetDebuffDataByIndex) == "function" then
+        local data = C_UnitAuras.GetDebuffDataByIndex(unit, index)
+        if type(data) == "table" then
+            return data.name, nil, nil, nil, nil, data.duration, data.expirationTime
+        end
+    end
+    return nil
+end
+
 -- External call safety: we always verify chat state and use a fallback channel.
 local function getOutputChannel()
     if ImYOURhealerDB.testMode then
@@ -976,11 +1033,8 @@ local INTERRUPT_LOCKOUT_SECONDS = {
 }
 
 local function getPlayerDebuffRemaining(spellName)
-    if type(UnitDebuff) ~= "function" then
-        return nil
-    end
     for i = 1, 40 do
-        local name, _, _, _, _, duration, expires = UnitDebuff("player", i)
+        local name, _, _, _, _, duration, expires = getUnitDebuffCompat("player", i)
         if not name then
             break
         end
@@ -1041,10 +1095,7 @@ local function maybeAnnounceSilenceByInterrupt(destGUID, spellID, spellName)
 end
 
 local function getCooldownTextForSpell(spellID)
-    if type(GetSpellCooldown) ~= "function" then
-        return nil
-    end
-    local start, duration = GetSpellCooldown(spellID)
+    local start, duration = getSpellCooldownCompat(spellID)
     if not duration or duration <= 1.5 then
         return nil
     end
@@ -1281,7 +1332,7 @@ local function getManaPotionStatusText()
     if not bestItem then
         return ImYOURhealerDB.messages.manaPotCd or L.mana_pot_cd
     end
-    local start, duration = GetItemCooldown(bestItem)
+    local start, duration = getItemCooldownCompat(bestItem)
     if not start or not duration or start == 0 or duration == 0 then
         return ImYOURhealerDB.messages.manaPotReady or L.mana_pot_ready
     end
@@ -1418,7 +1469,17 @@ local function isSingleClassInFiveMan(targetClassToken)
     if not targetClassToken or IsInRaid() then
         return false
     end
-    local subgroup = (GetNumSubgroupMembers and GetNumSubgroupMembers()) or 0
+    local subgroup = 0
+    if type(GetNumSubgroupMembers) == "function" then
+        subgroup = tonumber(GetNumSubgroupMembers()) or 0
+    elseif type(GetNumPartyMembers) == "function" then
+        subgroup = tonumber(GetNumPartyMembers()) or 0
+    elseif type(GetNumGroupMembers) == "function" and IsInGroup() then
+        subgroup = (tonumber(GetNumGroupMembers()) or 1) - 1
+    end
+    if subgroup < 0 then
+        subgroup = 0
+    end
     if (subgroup + 1) ~= 5 then
         return false
     end
@@ -2514,7 +2575,7 @@ createConfigUI = function()
         for idx, rule in ipairs(COOLDOWN_RULES[classToken] or {}) do
             local row = CreateFrame("CheckButton", nil, classFrame, "UICheckButtonTemplate")
             row:SetPoint("TOPLEFT", classFrame, "TOPLEFT", 0, -26 - ((idx - 1) * 24))
-            local spellName = GetSpellInfo(rule.spellID) or ("spell#" .. tostring(rule.spellID))
+            local spellName = getSpellNameByID(rule.spellID) or ("spell#" .. tostring(rule.spellID))
             setCheckButtonLabel(row, spellName)
             row:SetChecked(ImYOURhealerDB.cooldownSettings.spellEnabled[rule.spellID])
             row:SetScript("OnClick", function(self)
