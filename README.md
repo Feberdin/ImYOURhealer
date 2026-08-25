@@ -37,7 +37,7 @@ The config window is organized into tabs:
 - `Texts`: all configurable chat templates
 - `Tests`: all test buttons and utility toggles (test mode, minimap, debug, persistent log)
 
-## Quick Start
+## Quickstart
 1. Install and enable `ImYOURhealer`.
 2. Log in and run `/imyh`.
 3. Configure your texts and options.
