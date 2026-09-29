@@ -177,6 +177,7 @@ local LOCALES = {
         log_cleared = "Log geleert.",
         test_show_logs = "Logs anzeigen",
         test_clear_logs = "Logs leeren",
+        test_gear_scan = "Gear-Scan",
         cmd_help_1 = "/imyh - UI oeffnen",
         cmd_help_2 = "/imyh test - Begruessung sofort senden",
         cmd_help_3 = "/imyh testmode - /s umschalten",
@@ -196,6 +197,32 @@ local LOCALES = {
         cmd_help_17 = "/imyh manascope group|instance - Mana nur Gruppe oder nur Instanz",
         cmd_help_18 = "/imyh manacd <5-300> - Cooldown fuer Low-Mana Meldung",
         cmd_help_14 = "/imyh log on|off|show|clear - Persistentes Log",
+        cmd_help_20 = "/imyh gear - Vergleicht getragenes Gear mit Taschen und offener Bank",
+        gear_scan_start = "Gear-Scan gestartet.",
+        gear_scan_bank_closed = "Bank ist nicht offen. Es werden nur getragenes Gear und Taschen verglichen.",
+        gear_scan_none = "Keine klaren Heiler-Upgrades in Taschen oder Bank gefunden.",
+        gear_scan_header = "Gefundene Gear-Upgrades:",
+        gear_scan_line = "%s: %s statt %s (%+.1f Score, %s)",
+        gear_scan_line_empty = "%s: %s (%+.1f Score, %s)",
+        gear_source_bag = "Tasche",
+        gear_source_bank = "Bank",
+        gear_source_equipped = "getragen",
+        gear_slot_head = "Kopf",
+        gear_slot_neck = "Hals",
+        gear_slot_shoulder = "Schulter",
+        gear_slot_back = "Ruecken",
+        gear_slot_chest = "Brust",
+        gear_slot_wrist = "Handgelenk",
+        gear_slot_hands = "Haende",
+        gear_slot_waist = "Taille",
+        gear_slot_legs = "Beine",
+        gear_slot_feet = "Fuesse",
+        gear_slot_finger = "Ring",
+        gear_slot_trinket = "Schmuck",
+        gear_slot_mainhand = "Mainhand",
+        gear_slot_offhand = "Offhand",
+        gear_slot_twohand = "Zweihand",
+        gear_slot_weapon = "Waffe",
         selftest_ok = "Selftest erfolgreich.",
         selftest_fail = "Selftest fehlgeschlagen",
     },
@@ -344,6 +371,7 @@ local LOCALES = {
         log_cleared = "Log cleared.",
         test_show_logs = "Show logs",
         test_clear_logs = "Clear logs",
+        test_gear_scan = "Gear scan",
         cmd_help_1 = "/imyh - open UI",
         cmd_help_2 = "/imyh test - send greeting now",
         cmd_help_3 = "/imyh testmode - toggle /s",
@@ -363,6 +391,32 @@ local LOCALES = {
         cmd_help_17 = "/imyh manascope group|instance - low mana scope",
         cmd_help_18 = "/imyh manacd <5-300> - low mana alert cooldown",
         cmd_help_14 = "/imyh log on|off|show|clear - persistent log",
+        cmd_help_20 = "/imyh gear - compare equipped healer gear with bags and open bank",
+        gear_scan_start = "Gear scan started.",
+        gear_scan_bank_closed = "Bank is not open. Only equipped gear and bags will be compared.",
+        gear_scan_none = "No clear healer upgrades found in bags or bank.",
+        gear_scan_header = "Found gear upgrades:",
+        gear_scan_line = "%s: %s instead of %s (%+.1f score, %s)",
+        gear_scan_line_empty = "%s: %s (%+.1f score, %s)",
+        gear_source_bag = "bag",
+        gear_source_bank = "bank",
+        gear_source_equipped = "equipped",
+        gear_slot_head = "Head",
+        gear_slot_neck = "Neck",
+        gear_slot_shoulder = "Shoulder",
+        gear_slot_back = "Back",
+        gear_slot_chest = "Chest",
+        gear_slot_wrist = "Wrist",
+        gear_slot_hands = "Hands",
+        gear_slot_waist = "Waist",
+        gear_slot_legs = "Legs",
+        gear_slot_feet = "Feet",
+        gear_slot_finger = "Ring",
+        gear_slot_trinket = "Trinket",
+        gear_slot_mainhand = "Main Hand",
+        gear_slot_offhand = "Off Hand",
+        gear_slot_twohand = "Two-Hand",
+        gear_slot_weapon = "Weapon",
         selftest_ok = "Selftest passed.",
         selftest_fail = "Selftest failed",
     },
@@ -588,6 +642,7 @@ local state = {
     pendingRunStartAt = 0,
     pendingPallyWhisperRunKey = nil,
     pendingWhisperFallbacks = {},
+    bankIsOpen = false,
 }
 
 local function tcopy(src)
@@ -817,6 +872,255 @@ local function getUnitDebuffCompat(unit, index)
         end
     end
     return nil
+end
+
+local function getContainerNumSlotsCompat(bagID)
+    if type(C_Container) == "table" and type(C_Container.GetContainerNumSlots) == "function" then
+        return C_Container.GetContainerNumSlots(bagID)
+    end
+    if type(GetContainerNumSlots) == "function" then
+        return GetContainerNumSlots(bagID)
+    end
+    return 0
+end
+
+local function getContainerItemLinkCompat(bagID, slot)
+    if type(C_Container) == "table" and type(C_Container.GetContainerItemLink) == "function" then
+        return C_Container.GetContainerItemLink(bagID, slot)
+    end
+    if type(GetContainerItemLink) == "function" then
+        return GetContainerItemLink(bagID, slot)
+    end
+    return nil
+end
+
+local GEAR_SCAN_SLOTS = {
+    { labelKey = "gear_slot_head", inventorySlots = { 1 }, equipLocs = { INVTYPE_HEAD = true } },
+    { labelKey = "gear_slot_neck", inventorySlots = { 2 }, equipLocs = { INVTYPE_NECK = true } },
+    { labelKey = "gear_slot_shoulder", inventorySlots = { 3 }, equipLocs = { INVTYPE_SHOULDER = true } },
+    { labelKey = "gear_slot_back", inventorySlots = { 15 }, equipLocs = { INVTYPE_CLOAK = true } },
+    { labelKey = "gear_slot_chest", inventorySlots = { 5 }, equipLocs = { INVTYPE_CHEST = true, INVTYPE_ROBE = true } },
+    { labelKey = "gear_slot_wrist", inventorySlots = { 9 }, equipLocs = { INVTYPE_WRIST = true } },
+    { labelKey = "gear_slot_hands", inventorySlots = { 10 }, equipLocs = { INVTYPE_HAND = true } },
+    { labelKey = "gear_slot_waist", inventorySlots = { 6 }, equipLocs = { INVTYPE_WAIST = true } },
+    { labelKey = "gear_slot_legs", inventorySlots = { 7 }, equipLocs = { INVTYPE_LEGS = true } },
+    { labelKey = "gear_slot_feet", inventorySlots = { 8 }, equipLocs = { INVTYPE_FEET = true } },
+    { labelKey = "gear_slot_finger", inventorySlots = { 11, 12 }, equipLocs = { INVTYPE_FINGER = true } },
+    { labelKey = "gear_slot_trinket", inventorySlots = { 13, 14 }, equipLocs = { INVTYPE_TRINKET = true } },
+    { labelKey = "gear_slot_mainhand", inventorySlots = { 16 }, equipLocs = { INVTYPE_WEAPONMAINHAND = true, INVTYPE_WEAPON = true, INVTYPE_HOLDABLE = true, INVTYPE_SHIELD = true } },
+    { labelKey = "gear_slot_offhand", inventorySlots = { 17 }, equipLocs = { INVTYPE_WEAPONOFFHAND = true, INVTYPE_HOLDABLE = true, INVTYPE_SHIELD = true, INVTYPE_WEAPON = true } },
+    { labelKey = "gear_slot_twohand", inventorySlots = { 16, 17 }, equipLocs = { INVTYPE_2HWEAPON = true } },
+    { labelKey = "gear_slot_weapon", inventorySlots = { 16 }, equipLocs = { INVTYPE_RANGED = true, INVTYPE_RANGEDRIGHT = true, INVTYPE_THROWN = true, INVTYPE_RELIC = true } },
+}
+
+local HEALER_SCORE_WEIGHTS = {
+    ITEM_MOD_HEALING_DONE_SHORT = 1.00,
+    ITEM_MOD_HEALING_DONE = 1.00,
+    ITEM_MOD_SPELL_POWER_SHORT = 0.85,
+    ITEM_MOD_SPELL_POWER = 0.85,
+    ITEM_MOD_INTELLECT_SHORT = 0.65,
+    ITEM_MOD_INTELLECT = 0.65,
+    ITEM_MOD_SPIRIT_SHORT = 0.45,
+    ITEM_MOD_SPIRIT = 0.45,
+    ITEM_MOD_MANA_REGENERATION_SHORT = 1.25,
+    ITEM_MOD_MANA_REGENERATION = 1.25,
+    ITEM_MOD_CRIT_RATING_SHORT = 0.35,
+    ITEM_MOD_CRIT_RATING = 0.35,
+    ITEM_MOD_HASTE_RATING_SHORT = 0.45,
+    ITEM_MOD_HASTE_RATING = 0.45,
+}
+
+local function getItemLevelCompat(itemLink)
+    if type(GetDetailedItemLevelInfo) == "function" then
+        local itemLevel = GetDetailedItemLevelInfo(itemLink)
+        if type(itemLevel) == "number" and itemLevel > 0 then
+            return itemLevel
+        end
+    end
+    if type(C_Item) == "table" and type(C_Item.GetDetailedItemLevelInfo) == "function" then
+        local itemLevel = C_Item.GetDetailedItemLevelInfo(itemLink)
+        if type(itemLevel) == "number" and itemLevel > 0 then
+            return itemLevel
+        end
+    end
+    return 0
+end
+
+local function getItemRecord(itemLink, source)
+    if not itemLink then
+        return nil
+    end
+
+    local itemName, _, _, _, _, _, _, _, equipLoc = GetItemInfo(itemLink)
+    if not itemName or not equipLoc or equipLoc == "" then
+        return nil
+    end
+
+    local stats = GetItemStats(itemLink) or {}
+    local score = 0
+    for statKey, weight in pairs(HEALER_SCORE_WEIGHTS) do
+        local statValue = tonumber(stats[statKey] or 0) or 0
+        if statValue > 0 then
+            score = score + (statValue * weight)
+        end
+    end
+    score = score + (getItemLevelCompat(itemLink) * 0.05)
+
+    return {
+        link = itemLink,
+        name = itemName,
+        equipLoc = equipLoc,
+        score = score,
+        source = source or L.gear_source_bag,
+    }
+end
+
+local function getGearSlotLabel(slotConfig)
+    return L[slotConfig.labelKey] or slotConfig.labelKey or "Slot"
+end
+
+local function getEquippedItemForSlot(inventorySlot)
+    local itemLink = GetInventoryItemLink("player", inventorySlot)
+    if not itemLink then
+        return nil
+    end
+    return getItemRecord(itemLink, L.gear_source_equipped)
+end
+
+local function getBaselineItemForSlot(slotConfig)
+    local bestRecord = nil
+    for _, inventorySlot in ipairs(slotConfig.inventorySlots) do
+        local record = getEquippedItemForSlot(inventorySlot)
+        if record and (not bestRecord or record.score < bestRecord.score) then
+            bestRecord = record
+        end
+    end
+    return bestRecord
+end
+
+local function collectBagItemRecords()
+    local items = {}
+    for bagID = 0, (NUM_BAG_SLOTS or 4) do
+        local numSlots = tonumber(getContainerNumSlotsCompat(bagID)) or 0
+        for slot = 1, numSlots do
+            local itemLink = getContainerItemLinkCompat(bagID, slot)
+            local record = getItemRecord(itemLink, L.gear_source_bag)
+            if record then
+                table.insert(items, record)
+            end
+        end
+    end
+    return items
+end
+
+local function isBankAvailable()
+    if BankFrame and BankFrame.IsShown and BankFrame:IsShown() then
+        return true
+    end
+    if state.bankIsOpen then
+        return true
+    end
+    return false
+end
+
+local function collectBankItemRecords()
+    if not isBankAvailable() then
+        return {}
+    end
+
+    local items = {}
+    local bankBagID = type(BANK_CONTAINER) == "number" and BANK_CONTAINER or -1
+    local mainBankSlots = tonumber(getContainerNumSlotsCompat(bankBagID)) or 0
+    for slot = 1, mainBankSlots do
+        local itemLink = getContainerItemLinkCompat(bankBagID, slot)
+        local record = getItemRecord(itemLink, L.gear_source_bank)
+        if record then
+            table.insert(items, record)
+        end
+    end
+
+    local startBag = (NUM_BAG_SLOTS or 4) + 1
+    local endBag = startBag + (NUM_BANKBAGSLOTS or 7) - 1
+    for bagID = startBag, endBag do
+        local numSlots = tonumber(getContainerNumSlotsCompat(bagID)) or 0
+        for slot = 1, numSlots do
+            local itemLink = getContainerItemLinkCompat(bagID, slot)
+            local record = getItemRecord(itemLink, L.gear_source_bank)
+            if record then
+                table.insert(items, record)
+            end
+        end
+    end
+    return items
+end
+
+local function scanGearUpgrades()
+    printMsg(L.gear_scan_start)
+    if not isBankAvailable() then
+        printMsg(L.gear_scan_bank_closed)
+    end
+
+    local candidates = collectBagItemRecords()
+    local bankItems = collectBankItemRecords()
+    for _, record in ipairs(bankItems) do
+        table.insert(candidates, record)
+    end
+
+    local upgrades = {}
+    for _, slotConfig in ipairs(GEAR_SCAN_SLOTS) do
+        local baseline = getBaselineItemForSlot(slotConfig)
+        local bestCandidate = nil
+        for _, candidate in ipairs(candidates) do
+            if slotConfig.equipLocs[candidate.equipLoc] then
+                local baselineScore = baseline and baseline.score or 0
+                local delta = candidate.score - baselineScore
+                if delta > 0.5 and (not bestCandidate or delta > bestCandidate.delta) then
+                    bestCandidate = {
+                        slotLabel = getGearSlotLabel(slotConfig),
+                        candidate = candidate,
+                        baseline = baseline,
+                        delta = delta,
+                    }
+                end
+            end
+        end
+        if bestCandidate then
+            table.insert(upgrades, bestCandidate)
+        end
+    end
+
+    table.sort(upgrades, function(a, b)
+        return a.delta > b.delta
+    end)
+
+    if #upgrades == 0 then
+        printMsg(L.gear_scan_none)
+        return
+    end
+
+    printMsg(L.gear_scan_header)
+    for _, upgrade in ipairs(upgrades) do
+        local line
+        if upgrade.baseline and upgrade.baseline.link then
+            line = string.format(
+                L.gear_scan_line,
+                upgrade.slotLabel,
+                tostring(upgrade.candidate.link),
+                tostring(upgrade.baseline.link),
+                upgrade.delta,
+                upgrade.candidate.source
+            )
+        else
+            line = string.format(
+                L.gear_scan_line_empty,
+                upgrade.slotLabel,
+                tostring(upgrade.candidate.link),
+                upgrade.delta,
+                upgrade.candidate.source
+            )
+        end
+        printMsg(line)
+    end
 end
 
 -- External call safety: we always verify chat state and use a fallback channel.
@@ -2727,6 +3031,9 @@ createConfigUI = function()
     addTestButton(L.test_clear_logs, 0, -304, function()
         clearLogs()
     end)
+    addTestButton(L.test_gear_scan, 286, -304, function()
+        scanGearUpgrades()
+    end)
 
     selectMainTab(1)
 
@@ -2878,6 +3185,7 @@ local function printHelp()
     printMsg(L.cmd_help_17)
     printMsg(L.cmd_help_18)
     printMsg(L.cmd_help_19)
+    printMsg(L.cmd_help_20)
 end
 
 local function runSelfTests()
@@ -3119,6 +3427,11 @@ SlashCmdList["IMYOURHEALER"] = function(msg)
         return
     end
 
+    if cmd == "gear" then
+        scanGearUpgrades()
+        return
+    end
+
     printMsg(L.unknown_cmd)
     printHelp()
 end
@@ -3134,6 +3447,8 @@ addon:RegisterEvent("CHAT_MSG_RAID")
 addon:RegisterEvent("CHAT_MSG_RAID_LEADER")
 addon:RegisterEvent("CHAT_MSG_SYSTEM")
 addon:RegisterEvent("PLAYER_REGEN_ENABLED")
+addon:RegisterEvent("BANKFRAME_OPENED")
+addon:RegisterEvent("BANKFRAME_CLOSED")
 
 addon:SetScript("OnUpdate", function(_, elapsed)
     if not ImYOURhealerDB then
@@ -3237,6 +3552,16 @@ addon:SetScript("OnEvent", function(_, event, ...)
 
     if event == "PLAYER_REGEN_ENABLED" then
         state.rangeAlertTracker = {}
+        return
+    end
+
+    if event == "BANKFRAME_OPENED" then
+        state.bankIsOpen = true
+        return
+    end
+
+    if event == "BANKFRAME_CLOSED" then
+        state.bankIsOpen = false
         return
     end
 end)
